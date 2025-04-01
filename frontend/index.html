@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real Estate Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            height: 100vh;
+            margin: 0;
+        }
+        .sidebar {
+            width: 25%;
+            background: #222;
+            color: white;
+            padding: 20px;
+        }
+        .sidebar input, .sidebar button {
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            border: none;
+        }
+        .sidebar button {
+            background: green;
+            color: white;
+            cursor: pointer;
+        }
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            background: #111;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>User Form</h2>
+        <input type="text" placeholder="Location" id="location">
+        <input type="text" placeholder="Price Range" id="priceRange">
+        <input type="text" placeholder="Floor Area" id="floorArea">
+        <input type="number" placeholder="# of Rooms" id="rooms">
+        <button id="submit">Submit</button>
+    </div>
+    <div class="main-content">
+        <h2>Visualizations will appear here</h2>
+    </div>
+</body>
+</html>
