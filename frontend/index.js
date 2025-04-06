@@ -1,7 +1,6 @@
 
-import Groq from './node_modules/groq-sdk';
-const API_KEY = "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";
-const groq = new Groq({ apiKey: API_KEY, dangerouslyAllowBrowser: true });
+
+
 
 console.log("index.js loaded")
 
@@ -35,6 +34,8 @@ let messages = [
   
   async function handleSend(message) {
     // Create a new user message
+
+    
     const newMessage = {
       message: message,
       direction: 'outgoing',
@@ -48,14 +49,9 @@ let messages = [
     // Update the message container with new message
     // displayMessages();
     console.log(messages)
- 
+    console.log("before call to GROQ")
     userMessageInput.value = '';
-  
-    // Set typing state to true while processing response
-    // isTyping = true;
-    // displayMessages();
-  
-    // // Simulate processing and get the bot's response
+    
     await processMessageToGroq(messages);
   }
   
@@ -77,53 +73,40 @@ let messages = [
     messageContainer.scrollTop = messageContainer.scrollHeight;
   }
   
-  // Process message with Groq API (or mock response for now)
+  // Process message with Groq API 
   async function processMessageToGroq(chatMessages) {
   
-    let apiMessages = [
+    let formattedMessages = [
       systemMessage,
       ...chatMessages.map((messageObject) => ({
         role: messageObject.sender === "ChatGPT" ? "assistant" : "user",
         content: messageObject.message
       }))
     ];
-  
-    const apiRequestBody = {
-      "model": "llama-3.3-70b-versatile",
-      "messages": apiMessages,
-      "temperature": 1,
-      "max_completion_tokens": 1024,
-      "top_p": 1,
-      "stream": true,
-      "stop": null
-    };
+    console.log("calling GROQ")
   
     try {
-      // Simulating Groq API response (replace with actual API call)
-      console.log("calling groq now")
-      const chatCompletion = await groq.chat.completions.create(apiRequestBody);
-  
-      let responseMessage = "";
-  
-      for await (const chunk of chatCompletion) {
-        const content = chunk.choices[0]?.delta?.content || '';
-        responseMessage += content;
-      }
-  
-      // Add ChatGPT's response message
-      messages.push({
-        message: responseMessage,
-        sender: "ChatGPT",
-        sentTime: "just now"
-      });
+        const response = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ messages: formattedMessages })
+        });
 
-      console.log(messages)
-  
-    //   isTyping = false;
-    //   displayMessages();
-  
+        const data = await response.json();
+
+        const botReply = {
+            message: data.reply,
+            direction: 'incoming',
+            sender: "ChatGPT",
+            sentTime: "just now"
+        };
+
+        messages.push(botReply);
+        console.log("after calling GROQ")
+        console.log(messages)
+        
     } catch (error) {
-      console.error("Error fetching response from Groq API:", error);
+        console.error("Error contacting chatbot API:", error);
     }
   }
   
