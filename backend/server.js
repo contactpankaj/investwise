@@ -1,5 +1,9 @@
-const express = require("express");
-const path = require("path");
+import express from "express";
+import path from "path";
+
+// const express = require("express");
+// const path = require("path");
+const __dirname = new URL('.', import.meta.url).pathname;
 
 const app = express();
 const PORT = process.env.PORT || 8000;

@@ -46,6 +46,38 @@ body {
     box-sizing: border-box;
 }
 
+.chat-input {
+    display: flex;
+    margin-top: 10px;
+    width: 100%;
+}
+
+.chat-input input {
+    width: 90%;
+    margin: 5px;
+    padding: 5px;
+    border: none;
+    border-radius: 4px;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.chat-input button {
+    width: 30px; 
+    height: 30px;
+    padding:2px;
+    margin: 10px 5px 5px 5px;
+    border-radius: 50%;
+    border: none;
+    background-color: green;
+    color: white;
+    justify-content: center; 
+    align-items: center; 
+    cursor: pointer;
+    display: flex;
+    box-sizing: border-box;
+}
+
 .main-content {
     flex: 1;
     padding: 20px;

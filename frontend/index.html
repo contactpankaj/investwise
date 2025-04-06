@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Real Estate Dashboard</title>
     <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
 </head>
 <body>
     <div class="sidebar">
@@ -18,9 +20,15 @@
         </div>
 
         <div class="chatbot" id="chatbot-main">
-           <h2>Chatbot</h2>
-
-        </div>
+            <div class="messageContainer"></div>
+            <div class="chat-input">
+              <input type="text" placeholder="Type your message here" id="userMessage" />
+              <button id="sendBtn">
+                <i class="fas fa-paper-plane"></i>
+              </button>
+            </div>
+          </div>
+          
     </div>
 
     <div class="main-content">
@@ -31,8 +39,10 @@
     </div>
 
     <!-- Load visualization logic -->
-    <script src="viz1.js"></script>
+    <!-- <script src="viz1.js"></script>
     <script src="viz2.js"></script>
-    <script src="viz3.js"></script>
+    <script src="viz3.js"></script> -->
+    <script type="module" src="index.js"></script>
+
 </body>
 </html>
