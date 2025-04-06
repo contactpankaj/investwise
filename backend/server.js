@@ -36,7 +36,7 @@ app.post("/api/chat", async (req, res) => {
         model: "llama-3.3-70b-versatile",
         messages,
         temperature: 1,
-        max_completion_tokens: 150,
+        max_completion_tokens: 30,
         top_p: 1,
         stream: false,
         stop: null

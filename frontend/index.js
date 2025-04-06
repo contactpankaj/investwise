@@ -64,50 +64,13 @@ messages.push(botMessage);
     const messageElement = document.createElement('div');
     messageElement.classList.add(msg.sender === 'Bot' ? 'chatbot-message' : 'user-message');
     messageElement.innerHTML = `
-      <textarea readonly>${msg.message}</textarea>
+      <div class="message-content">${msg.message}</div>
     `;
-
-    const textarea = messageElement.querySelector('textarea');
-    // autoResizeTextarea(textarea);
 
     messageContainer.appendChild(messageElement);
     messageContainer.scrollTop = messageContainer.scrollHeight;
   }
 
-  function autoResizeTextarea(textarea) {
-    // Set initial height to auto to get the natural height
-    const prevHeight = textarea.style.height;
-  
-    
-    const newHeight = textarea.scrollHeight + 'px';
-    // Check if content is overflowing
-    if (prevHeight !== newHeight) {
-      textarea.style.height = 'auto';
-      console.log("height adjusting code")
-      textarea.style.height = newHeight;
-    } else {
-      console.log("height NOT adjusting code")
-    }
-  }
-  
-  
-  // Display all messages in the message container
-  function displayMessages() {
-    messageContainer.innerHTML = ''; // Clear previous messages
-  
-    messages.forEach(msg => {
-      const messageElement = document.createElement('div');
-      messageElement.classList.add(msg.sender === 'ChatGPT' ? 'chatbot-message' : 'user-message');
-      messageElement.innerHTML = `
-        <p>${msg.message}</p>
-        <small>${msg.sentTime}</small>
-      `;
-      messageContainer.appendChild(messageElement);
-    });
-  
-    // Scroll to the latest message
-    messageContainer.scrollTop = messageContainer.scrollHeight;
-  }
   
   // Process message with Groq API 
   async function processMessageToGroq(chatMessages) {
