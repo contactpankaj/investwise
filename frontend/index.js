@@ -1,27 +1,30 @@
-
-
-
-
 console.log("index.js loaded")
 
-let messages = [
-    {
-      message: "Hello, I'm ChatBot! Ask me anything!",
-      sentTime: "just now",
-      sender: "ChatGPT"
-    }
-  ];
+const messageContainer = document.getElementById('messageContainer');
+const userMessageInput = document.getElementById('userMessage');
+const sendButton = document.getElementById('sendBtn');
+
+//Chatbot start message
+const botMessage = {
+  message: "Hello, I'm ChatBot! Ask me anything!",
+  direction: 'incoming',
+  sender: "Bot",
+  sentTime: "just now"
+};
+
+let messages = [];
+messages.push(botMessage);
 
   const systemMessage = {
     role: "system",
     content: "You are a knowledgeable AI assistant specializing in location-based guidance. Provide details on zip codes, landmarks, and nearby amenities such as restaurants, transit options, and attractions. Keep the responses concise and brief."
   };
+
+  appendMessage(botMessage)
   
   let isTyping = false;
   
-  const messageContainer = document.getElementById('messageContainer');
-  const userMessageInput = document.getElementById('userMessage');
-  const sendButton = document.getElementById('sendBtn');
+  
   
 //   displayMessages();
   
@@ -50,10 +53,43 @@ let messages = [
     // displayMessages();
     console.log(messages)
     console.log("before call to GROQ")
+
+    appendMessage(newMessage)
     userMessageInput.value = '';
     
     await processMessageToGroq(messages);
   }
+
+  function appendMessage(msg) {
+    const messageElement = document.createElement('div');
+    messageElement.classList.add(msg.sender === 'Bot' ? 'chatbot-message' : 'user-message');
+    messageElement.innerHTML = `
+      <textarea readonly>${msg.message}</textarea>
+    `;
+
+    const textarea = messageElement.querySelector('textarea');
+    // autoResizeTextarea(textarea);
+
+    messageContainer.appendChild(messageElement);
+    messageContainer.scrollTop = messageContainer.scrollHeight;
+  }
+
+  function autoResizeTextarea(textarea) {
+    // Set initial height to auto to get the natural height
+    const prevHeight = textarea.style.height;
+  
+    
+    const newHeight = textarea.scrollHeight + 'px';
+    // Check if content is overflowing
+    if (prevHeight !== newHeight) {
+      textarea.style.height = 'auto';
+      console.log("height adjusting code")
+      textarea.style.height = newHeight;
+    } else {
+      console.log("height NOT adjusting code")
+    }
+  }
+  
   
   // Display all messages in the message container
   function displayMessages() {
@@ -97,11 +133,13 @@ let messages = [
         const botReply = {
             message: data.reply,
             direction: 'incoming',
-            sender: "ChatGPT",
+            sender: "Bot",
             sentTime: "just now"
         };
 
-        messages.push(botReply);
+        messages.push(botReply)
+        appendMessage(botReply)
+
         console.log("after calling GROQ")
         console.log(messages)
         
