@@ -5,11 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Real Estate Dashboard</title>
     <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 </head>
 <body>
     <div class="sidebar">
         <div class="userinput">
-            <h2>User Form</h2>
+            <h3>User Form</h3>
             <input type="text" placeholder="Location" id="location">
             <input type="text" placeholder="Price Range" id="priceRange">
             <input type="text" placeholder="Floor Area" id="floorArea">
@@ -18,9 +20,15 @@
         </div>
 
         <div class="chatbot" id="chatbot-main">
-           <h2>Chatbot</h2>
-
-        </div>
+            <div id="messageContainer" class="messageContainer"></div>
+            <div class="chat-input">
+              <input type="text" placeholder="Type your message here" id="userMessage" />
+              <button id="sendBtn">
+                <i class="fas fa-paper-plane"></i>
+              </button>
+            </div>
+          </div>
+          
     </div>
 
     <div class="main-content">
@@ -31,8 +39,10 @@
     </div>
 
     <!-- Load visualization logic -->
-    <script src="viz1.js"></script>
+    <!-- <script src="viz1.js"></script>
     <script src="viz2.js"></script>
-    <script src="viz3.js"></script>
+    <script src="viz3.js"></script> -->
+    <script type="module" src="index.js"></script>
+
 </body>
 </html>
