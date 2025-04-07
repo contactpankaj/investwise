@@ -10,7 +10,13 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "cors": "^2.8.5",
+    "csv-parser": "^3.2.0",
     "express": "^5.1.0",
+    "mysql2": "^3.14.0",
     "path": "^0.12.7"
   }
 }
+
+
+AIzaSyBul6G34D68mAN6CTmtdX40-XRdJvlvqUo
