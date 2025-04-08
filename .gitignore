@@ -1,0 +1,35 @@
+# *.csv
+# node_modules/
+
+# /folder_1/node_modules
+# /backend_1/__pycache__
+# Ignore all CSV files
+*.csv
+
+# Node modules (anywhere)
+node_modules/
+
+# Python cache (anywhere)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pyd
+
+# Logs
+*.log
+
+# Env files
+.env
+.env.*
+
+# macOS & Windows junk
+.DS_Store
+Thumbs.db
+
+/folder_1/node_modules
+/backend_1/__pycache__
+
+backend_1/venv/
+
+backend_1/app/data
