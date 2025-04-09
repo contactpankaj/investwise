@@ -43,10 +43,10 @@ const MapComponent = ({
   // Add tooltips to each ZIP code area
   const onEachFeature = (feature, layer) => {
     const zipCode = feature.properties.ZCTA5CE10;
-    console.log('Printing location data inside onEachFeature')
-    console.log('Zip code:', zipCode);
+    // console.log('Printing location data inside onEachFeature')
+    // console.log('Zip code:', zipCode);
     const zipData = locationData.find(item => String(item.zip) === zipCode);
-    console.log('Zip data:', zipData);
+    // console.log('Zip data:', zipData);
     
     if (zipData) {
       layer.bindTooltip(

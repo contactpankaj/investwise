@@ -6,17 +6,31 @@ const SearchForm = ({
   selectedCity,
   setSelectedCity,
   handleSubmit,
+  handleForecast,
   loading,
   geoJsonLoading,
 }) => {
   const [acre, setAcre] = useState('');
   const [bedroom, setBedroom] = useState('');
+  const [bathroom, setBathroom] = useState('');
+  const [houseSize, setHouseSize] = useState('');
 
   const onSubmit = (e) => {
     e.preventDefault();
-    // You can log or use acre and bedroom for future features
-    console.log('Submitted:', { selectedState, selectedCity, acre, bedroom });
-    handleSubmit(); // Trigger heatmap fetch using city and state
+
+    const formData = {
+      state: selectedState,
+      city: selectedCity,
+      acre: parseFloat(acre),
+      bedroom: parseFloat(bedroom),
+      bathroom: parseFloat(bathroom),
+      houseSize: parseFloat(houseSize),
+    };
+
+    console.log('Submitted:', formData);
+
+    handleSubmit(); // for heatmap
+    handleForecast(formData); // for chart
   };
 
   return (
@@ -32,7 +46,6 @@ const SearchForm = ({
           className="border border-gray-300 rounded px-3 py-2"
           required
         />
-
         <input
           type="text"
           placeholder="City"
@@ -41,7 +54,6 @@ const SearchForm = ({
           className="border border-gray-300 rounded px-3 py-2"
           required
         />
-
         <input
           type="number"
           placeholder="Acre"
@@ -49,12 +61,25 @@ const SearchForm = ({
           onChange={(e) => setAcre(e.target.value)}
           className="border border-gray-300 rounded px-3 py-2"
         />
-
         <input
           type="number"
           placeholder="Number of Bedrooms"
           value={bedroom}
           onChange={(e) => setBedroom(e.target.value)}
+          className="border border-gray-300 rounded px-3 py-2"
+        />
+        <input
+          type="number"
+          placeholder="Number of Bathrooms"
+          value={bathroom}
+          onChange={(e) => setBathroom(e.target.value)}
+          className="border border-gray-300 rounded px-3 py-2"
+        />
+        <input
+          type="number"
+          placeholder="House Size (sqft)"
+          value={houseSize}
+          onChange={(e) => setHouseSize(e.target.value)}
           className="border border-gray-300 rounded px-3 py-2"
         />
 
@@ -71,3 +96,4 @@ const SearchForm = ({
 };
 
 export default SearchForm;
+

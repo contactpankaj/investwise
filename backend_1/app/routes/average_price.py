@@ -1,6 +1,8 @@
 from fastapi import APIRouter, HTTPException, Query
+from pydantic import BaseModel
 from ..data_processing import get_price_data
 from ..utils import normalize_prices
+from ..ML_model import test_property_price_prediction
 
 router = APIRouter()
 
@@ -29,3 +31,27 @@ async def root():
     Root endpoint
     """
     return {"message": "Server is running on http://localhost:8000"}
+
+# ---------- New Prediction Route ----------
+
+class PredictionRequest(BaseModel):
+    beds: float
+    baths: float
+    acre_lot: float
+    house_size: float
+    start_year: int | None = None
+
+@router.post("/predict")
+async def predict_price(req: PredictionRequest):
+    result = test_property_price_prediction(
+        beds=req.beds,
+        baths=req.baths,
+        acre_lot=req.acre_lot,
+        house_size=req.house_size,
+        start_year=req.start_year
+    )
+    
+    if isinstance(result, dict) and 'error' in result:
+        raise HTTPException(status_code=500, detail=result["error"])
+    
+    return {"forecast": result}
