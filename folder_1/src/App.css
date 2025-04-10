@@ -1,57 +1,79 @@
-
 /* App.css */
 
-/* This creates a two-column dashboard */
+/* Full-screen two-column layout */
 .app-container {
   display: grid;
   grid-template-columns: 1fr 3fr;
   grid-gap: 16px;
-  height: 100vh;
+  height: 100vh; /* force entire app to fit screen */
   padding: 16px;
-  background-color: #f3f4f6; /* light gray background */
+  background-color: #0f172a; /* match homepage */
+  color: white;
+  overflow: hidden;
 }
 
-/* Left column with two rows */
+/* Left column with two vertical sections */
 .left-column {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  height: 100%;
+  overflow: hidden;
 }
 
-/* Right column: three rows */
+/* Right column with three rows stacked */
 .right-column {
   display: grid;
   grid-template-rows: 1fr 1fr 1fr;
   gap: 16px;
+  height: 100%;
+  overflow: hidden;
 }
 
-/* Reusable card style */
+/* Reusable card container */
 .card {
-  background-color: #ffffff;
-  border: 1px solid #e5e7eb; /* light gray */
-  border-radius: 0.75rem; /* rounded corners */
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  background-color: #1e293b; /* dark slate card */
+  border: 1px solid #334155;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   padding: 16px;
+  overflow: auto; /* scroll within the card if needed */
+  height: 100%;
+  color: white;
+}
+
+/* Form container takes ~40% of the left column */
+.form-container {
+  flex: 0 0 40%;
+}
+
+/* Chatbot fills the rest */
+.chatbot-container {
+  flex: 1;
   overflow: auto;
 }
 
-/* Optional: further sizing adjustments for individual containers */
-.form-container {
-  flex: 0 0 40%; /* adjust as needed */
-}
-
-.chatbot-container {
-  flex: 1; /* take remaining space */
-}
-
+/* Graph, heatmap, histogram layout */
 .graph-container,
 .heatmap-container,
-.placeholder-container {
-  /* These will share the same style, but you can override here if needed */
-}
+.placeholder-container,
 .histogram-container {
-  /* Add any specific styles you want for the histogram container */
-  min-height: 400px; /* Ensures enough space for the chart */
+  overflow: auto;
+}
+
+/* Optional: Ensure histogram gets enough vertical room */
+.histogram-container {
+  min-height: 0; /* allow it to shrink inside the grid */
   display: flex;
   flex-direction: column;
+}
+
+/* Global body defaults */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  background-color: #0f172a;
+  color: white;
 }

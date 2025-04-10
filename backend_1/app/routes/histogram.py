@@ -13,7 +13,7 @@ async def get_acres_histogram(
 ):
     try:
         # Load CSV
-        file_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data', 'house_price.csv')
+        file_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'data', 'house_price.csv')
         print(f"Loading CSV from: {file_path}")
         
         if not os.path.exists(file_path):
