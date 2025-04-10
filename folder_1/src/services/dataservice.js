@@ -25,6 +25,24 @@ export const fetchPriceData = async (state, city) => {
   }
 };
 
+
+//  Fetch prediction data from /predict endpoint
+export const fetchPriceForecast = async ({ beds, baths, acre_lot, house_size, start_year }) => {
+  try {
+    const response = await axios.post('/predict', {
+      beds,
+      baths,
+      acre_lot,
+      house_size,
+      start_year
+    });
+    
+    return response.data.forecast;
+  } catch (error) {
+    throw new Error(`Failed to fetch price forecast: ${error.response?.data?.detail || error.message}`);
+  }
+};
+
 // Fetch state's ZIP code boundaries from GitHub
 export const fetchStateZipBoundaries = async (state) => {
   try {

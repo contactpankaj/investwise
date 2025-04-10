@@ -6,7 +6,7 @@ import GraphVisualization from './components/GraphVisualization';
 import HeatMapView from './components/HeatMapView';
 import PlaceholderVisualization from './components/PlaceholderVisualization';
 import AcresHistogram from './components/AcresHistogram';
-import { fetchPriceData, fetchStateZipBoundaries, getCityLocation, fetchAcresHistogram } from './services/dataservice';
+import { fetchPriceData, fetchStateZipBoundaries, getCityLocation, fetchPriceForecast, fetchAcresHistogram } from './services/dataservice';
 
 const App = () => {
   const [loading, setLoading] = useState(false);
@@ -19,6 +19,7 @@ const App = () => {
   const [selectedCity, setSelectedCity] = useState('');
   const [geoJsonLoading, setGeoJsonLoading] = useState(false);
   const [histogramData, setHistogramData] = useState(null);
+  const [forecastData, setForecastData] = useState([]); // 🔥 for the chart
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -61,6 +62,21 @@ const App = () => {
       setLoading(false);
     }
   };
+  const handleForecast = async ({ acre, bedroom, bathroom, houseSize }) => {
+    try {
+      const result = await fetchPriceForecast({
+        beds: bedroom,
+        baths: bathroom,
+        acre_lot: acre,
+        house_size: houseSize,
+        start_year: new Date().getFullYear()
+      });
+      console.log('Forecast result:', result);
+      setForecastData(result);
+    } catch (error) {
+      console.error('Error fetching forecast:', error.message);
+    }
+  };
 
   return (
     <div className="app-container">
@@ -73,6 +89,7 @@ const App = () => {
             selectedCity={selectedCity}
             setSelectedCity={setSelectedCity}
             handleSubmit={handleSubmit}
+            handleForecast={handleForecast} 
             loading={loading}
             geoJsonLoading={geoJsonLoading}
           />
@@ -85,7 +102,7 @@ const App = () => {
       {/* RIGHT COLUMN */}
       <div className="right-column">
         <div className="card graph-container">
-          <GraphVisualization />
+          <GraphVisualization forecastData={forecastData}/>
         </div>
         <div className="card heatmap-container">
           <HeatMapView
