@@ -11,7 +11,7 @@ const GraphVisualization = ({ forecastData }) => {
   return (
     <div>
       <h2 className="text-xl font-bold mb-2">10-Year Price Forecast</h2>
-      <ResponsiveContainer width="100%" height={300}>
+      <ResponsiveContainer width="100%" height={200}>
         <LineChart data={forecastData}>
           <CartesianGrid stroke="#ccc" />
           <XAxis dataKey="year" />

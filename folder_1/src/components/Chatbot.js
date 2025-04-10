@@ -115,7 +115,7 @@ const Chatbot = () => {
                   wordBreak: "break-word",
                 }}
               >
-                <p style={{ margin: 0 }}>{message.message}</p>
+                <p style={{ margin: 0, color: "black" }}>{message.message}</p>
               </div>
             </div>
           ))}

@@ -9,9 +9,9 @@ axios.defaults.headers.common['Accept'] = 'application/json';
 
 // Fetch price data from API
 export const fetchPriceData = async (state, city) => {
-  console.log('Fetching price data for state before try:', state, 'and city:', city);
+  // console.log('Fetching price data for state before try:', state, 'and city:', city);
   try {
-    console.log('Fetching price data for state:', state, 'and city:', city);
+    // console.log('Fetching price data for state:', state, 'and city:', city);
     const response = await fetch(`http://localhost:8000/api/average-prices?state=${state}&city=${city}`);
     const data = await response.json();
     
@@ -67,16 +67,16 @@ export const getCityLocation = async (city, state) => {
 };
 
 export const fetchAcresHistogram = async (state, city) => {
-  console.log('Attempting to fetch histogram data for:', state, city);
+  // console.log('Attempting to fetch histogram data for:', state, city);
   try {
     const url = `http://localhost:8000/api/acres-histogram?state=${state}&city=${city}`;
-    console.log('Fetching from URL:', url);
+    // console.log('Fetching from URL:', url);
     
     const response = await fetch(url);
-    console.log('Response status:', response.status);
+    // console.log('Response status:', response.status);
     
     const data = await response.json();
-    console.log('Received data:', data);
+    // console.log('Received data:', data);
     
     if (data.error) {
       throw new Error(data.error);

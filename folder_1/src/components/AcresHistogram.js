@@ -180,22 +180,14 @@ const AcresHistogram = ({ histogramData, selectedState, selectedCity, loading })
   return (
     <div>
       <h2 className="text-xl font-bold mb-4">House Size Distribution</h2>
-      <div style={{ height: '400px' }}>
+      <div style={{ height: '290px' }}>
         <Bar 
           key={`histogram-${selectedState}-${selectedCity}`}
           options={options} 
           data={chartData} 
         />
       </div>
-      {histogramData?.metadata && (
-        <div className="mt-4 text-sm text-gray-600">
-          <p>Total Properties: {histogramData.metadata.total_properties}</p>
-          <p>Average Acres: {histogramData.metadata.avg_acres.toFixed(2)}</p>
-          <p>Median Acres: {histogramData.metadata.median_acres.toFixed(2)}</p>
-          <p>Range: {histogramData.metadata.min_acres.toFixed(2)} - {histogramData.metadata.max_acres.toFixed(2)} acres</p>
-          <p>Bin Size: {histogramData.metadata.bin_size.toFixed(2)} acres</p>
-        </div>
-      )}
+
     </div>
   );
 };

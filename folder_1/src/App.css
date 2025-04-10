@@ -24,7 +24,8 @@
 /* Right column with three rows stacked */
 .right-column {
   display: grid;
-  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-rows: 0.9fr 0.8fr 1.3fr;
+  grid-template-rows: 30% 25% 45%; /* graph, heatmap, placeholder */
   gap: 16px;
   height: 100%;
   overflow: hidden;
