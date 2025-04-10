@@ -47,3 +47,26 @@ export const fetchStateZipBoundaries = async (state) => {
 export const getCityLocation = async (city, state) => {
   return await getCoordinatesFromGeocoding(city, state);
 };
+
+export const fetchAcresHistogram = async (state, city) => {
+  console.log('Attempting to fetch histogram data for:', state, city);
+  try {
+    const url = `http://localhost:8000/api/acres-histogram?state=${state}&city=${city}`;
+    console.log('Fetching from URL:', url);
+    
+    const response = await fetch(url);
+    console.log('Response status:', response.status);
+    
+    const data = await response.json();
+    console.log('Received data:', data);
+    
+    if (data.error) {
+      throw new Error(data.error);
+    }
+    
+    return data;
+  } catch (error) {
+    console.error('Error fetching histogram data:', error);
+    throw new Error(`Failed to fetch histogram data: ${error.message}`);
+  }
+};  

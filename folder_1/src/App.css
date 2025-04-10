@@ -49,3 +49,9 @@
 .placeholder-container {
   /* These will share the same style, but you can override here if needed */
 }
+.histogram-container {
+  /* Add any specific styles you want for the histogram container */
+  min-height: 400px; /* Ensures enough space for the chart */
+  display: flex;
+  flex-direction: column;
+}
