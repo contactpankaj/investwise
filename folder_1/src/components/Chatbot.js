@@ -1,6 +1,6 @@
 import React from "react";
 import Groq from "groq-sdk";
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 const API_KEY = "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";
 const groq = new Groq({ apiKey: API_KEY, dangerouslyAllowBrowser: true });
@@ -20,6 +20,8 @@ const Chatbot = () => {
     },
   ]);
 
+  const inputRef = useRef(null);
+
   const handleSend = async (message) => {
     const newMessage = {
       message,
@@ -35,6 +37,8 @@ const Chatbot = () => {
     // How it responds, how it talks, etc.
     setIsTyping(true);
     await processMessageToGroq(newMessages);
+
+    if (inputRef.current) inputRef.current.value = "";
   };
 
   async function processMessageToGroq(chatMessages) {
@@ -124,6 +128,7 @@ const Chatbot = () => {
       <div style={{ marginTop: "auto", padding: "10px" }}>
         <div style={{ display: "flex", gap: "8px" }}>
           <input
+            ref={inputRef}
             type="text"
             placeholder="Type message here"
             onKeyPress={(e) => e.key === "Enter" && handleSend(e.target.value)}
@@ -136,7 +141,7 @@ const Chatbot = () => {
           />
           <button
             onClick={() => {
-              const input = document.querySelector("#chat-input");
+              const input = inputRef.current;
               if (input) handleSend(input.value);
             }}
             style={{
