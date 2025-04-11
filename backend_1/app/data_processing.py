@@ -38,7 +38,7 @@ def process_csv_data():
                 'normalizedPrice': 1  # This will be calculated when requested
             })
         
-        print("Data processed and cached successfully")
+        # print("Data processed and cached successfully")
     except Exception as e:
         print(f"Error processing CSV data: {e}")
         raise

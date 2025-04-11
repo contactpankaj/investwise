@@ -39,6 +39,7 @@ class PredictionRequest(BaseModel):
     baths: float
     acre_lot: float
     house_size: float
+    state: str
     start_year: int | None = None
 
 @router.post("/predict")
@@ -48,6 +49,7 @@ async def predict_price(req: PredictionRequest):
         baths=req.baths,
         acre_lot=req.acre_lot,
         house_size=req.house_size,
+        state = req.state,
         start_year=req.start_year
     )
     

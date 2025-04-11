@@ -10,10 +10,10 @@ const SearchForm = ({
   loading,
   geoJsonLoading,
 }) => {
-  const [acre, setAcre] = useState("");
-  const [bedroom, setBedroom] = useState("");
-  const [bathroom, setBathroom] = useState("");
-  const [houseSize, setHouseSize] = useState("");
+  const [acre, setAcre] = useState("0.15");
+  const [bedroom, setBedroom] = useState("4");
+  const [bathroom, setBathroom] = useState("2");
+  const [houseSize, setHouseSize] = useState("1800");
 
   const stateCityMap = {
     arizona: ["Flagstaff", "Mesa", "Tucson", "Tempe", "Scottsdale"],
@@ -37,22 +37,21 @@ const SearchForm = ({
 
   const onSubmit = (e) => {
     e.preventDefault();
-
-    const formData = {
-      state: selectedState,
-      city: selectedCity,
-      acre: parseFloat(acre),
-      bedroom: parseFloat(bedroom),
-      bathroom: parseFloat(bathroom),
-      houseSize: parseFloat(houseSize),
+  
+    const payload = {
+      acre,
+      bedroom,
+      bathroom,
+      houseSize,
+      state: selectedState,   // ✅ Add state
+      city: selectedCity      // optional: if needed for other purposes
     };
-    // console.log("state - ", formData.state);
-    // console.log("city - ", formData.city);
-    console.log("Submitted:", formData);
 
     handleSubmit(); // for heatmap
-    handleForecast(formData); // for chart
+    handleForecast(payload); // for chart
   };
+  
+  
 
   return (
     <div className="form-container">

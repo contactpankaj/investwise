@@ -69,7 +69,7 @@ const MapComponent = ({
   };
 
   return (
-    <div className="border rounded overflow-hidden" style={{ height: '500px' }}>
+    <div className="border rounded overflow-hidden" style={{ height: '150px' }}>
       <MapContainer 
         center={mapCenter} 
         zoom={mapZoom} 

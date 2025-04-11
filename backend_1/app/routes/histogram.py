@@ -14,7 +14,7 @@ async def get_acres_histogram(
     try:
         # Load CSV
         file_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'data', 'house_price.csv')
-        print(f"Loading CSV from: {file_path}")
+        # print(f"Loading CSV from: {file_path}")
         
         if not os.path.exists(file_path):
             print(f"File not found: {file_path}")
@@ -22,7 +22,7 @@ async def get_acres_histogram(
 
         # Load and clean data
         df = pd.read_csv(file_path)
-        print(f"CSV loaded. Shape: {df.shape}")
+        # print(f"CSV loaded. Shape: {df.shape}")
         
         # Clean state and city
         df['state'] = df['state'].str.lower().str.strip()
@@ -32,8 +32,8 @@ async def get_acres_histogram(
         df['acre_lot'] = pd.to_numeric(df['acre_lot'], errors='coerce')
         
         # Print unique states and cities for debugging
-        print(f"States in dataset: {df['state'].unique().tolist()}")
-        print(f"Looking for state: {state.lower()}, city: {city.lower()}")
+        # print(f"States in dataset: {df['state'].unique().tolist()}")
+        # print(f"Looking for state: {state.lower()}, city: {city.lower()}")
 
         # Filter by state and city
         filtered = df[
@@ -41,10 +41,10 @@ async def get_acres_histogram(
             (df['city'].str.lower() == city.lower())
         ]
         
-        print(f"Found {len(filtered)} properties for {city}, {state}")
+        # print(f"Found {len(filtered)} properties for {city}, {state}")
 
         if filtered.empty:
-            print(f"No data found for {state}, {city}")
+            # print(f"No data found for {state}, {city}")
             raise HTTPException(
                 status_code=404, 
                 detail=f"No data found for state '{state}' and city '{city}'"
@@ -55,7 +55,7 @@ async def get_acres_histogram(
         acres = acres[acres > 0]  # Remove zero or negative values
         
         if acres.empty:
-            print(f"No valid acre data for {city}, {state}")
+            # print(f"No valid acre data for {city}, {state}")
             raise HTTPException(
                 status_code=404,
                 detail=f"No valid acre data for {city}, {state}"
@@ -63,7 +63,7 @@ async def get_acres_histogram(
 
         # Sort acres for better understanding of distribution
         sorted_acres = sorted(acres.tolist())
-        print(f"Sorted acre values: {sorted_acres}")
+        # print(f"Sorted acre values: {sorted_acres}")
         
         # Calculate statistics
         min_acres = acres.min()
@@ -71,8 +71,8 @@ async def get_acres_histogram(
         mean_acres = acres.mean()
         median_acres = np.median(acres)
         
-        print(f"Acre stats - Min: {min_acres:.4f}, Max: {max_acres:.4f}, Mean: {mean_acres:.4f}, Median: {median_acres:.4f}")
-        print(f"Number of valid acre values: {len(acres)}")
+        # print(f"Acre stats - Min: {min_acres:.4f}, Max: {max_acres:.4f}, Mean: {mean_acres:.4f}, Median: {median_acres:.4f}")
+        # print(f"Number of valid acre values: {len(acres)}")
 
         # Use automatic binning ('auto' often uses Sturges or FD)
         # Ensure at least 10 bins if possible, but cap at 50 for readability
@@ -83,15 +83,15 @@ async def get_acres_histogram(
         min_desired_bins = 50
         max_allowed_bins = 100
         if len(bin_edges) -1 < min_desired_bins and len(acres) > min_desired_bins:
-             print(f"Automatic bins ({len(bin_edges)-1}) too few, recalculating with {min_desired_bins} bins.")
+            #  print(f"Automatic bins ({len(bin_edges)-1}) too few, recalculating with {min_desired_bins} bins.")
              hist, bin_edges = np.histogram(acres, bins=min(min_desired_bins, len(acres))) # Use min_desired_bins, but no more bins than data points
         elif len(bin_edges) -1 > max_allowed_bins:
-             print(f"Automatic bins ({len(bin_edges)-1}) too many, recalculating with {max_allowed_bins} bins.")
+            #  print(f"Automatic bins ({len(bin_edges)-1}) too many, recalculating with {max_allowed_bins} bins.")
              hist, bin_edges = np.histogram(acres, bins=max_allowed_bins)
 
-        print(f"Using {len(bin_edges)-1} bins.")
-        print(f"Bin edges: {bin_edges.tolist()}")
-        print(f"Histogram frequencies: {hist.tolist()}")
+        # print(f"Using {len(bin_edges)-1} bins.")
+        # print(f"Bin edges: {bin_edges.tolist()}")
+        # print(f"Histogram frequencies: {hist.tolist()}")
 
         # Create formatted bin labels (handle potentially non-uniform widths)
         bin_labels = [f"{bin_edges[i]:.3f}-{bin_edges[i+1]:.3f}" for i in range(len(bin_edges)-1)]
@@ -112,15 +112,15 @@ async def get_acres_histogram(
             }
         }
         
-        print("Successfully created histogram data")
-        print(f"Response data: {response_data}")
+        # print("Successfully created histogram data")
+        # print(f"Response data: {response_data}")
         
         return response_data
 
     except Exception as e:
-        print(f"Error processing request: {str(e)}")
-        print("Full traceback:")
-        print(traceback.format_exc())
+        # print(f"Error processing request: {str(e)}")
+        # print("Full traceback:")
+        # print(traceback.format_exc())
         raise HTTPException(
             status_code=500, 
             detail=f"Error processing histogram data: {str(e)}"
