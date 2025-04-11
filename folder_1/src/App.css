@@ -68,13 +68,15 @@
   width: 100%;
 }
 
-/* Style for the input fields */
+/* Style for the select field (in form) */
 .input-field {
-  width: 100%;
+  display: block;       
+  width: 100%;          
   padding: 5px;
-  margin-bottom: 5px; /* Space between input fields */
+  margin-bottom: 5px;   
   border: 1px solid #ccc;
   border-radius: 4px;
+  box-sizing: border-box; 
 }
 
 /* Style for the submit button */

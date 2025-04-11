@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 
 const SearchForm = ({
@@ -16,6 +15,26 @@ const SearchForm = ({
   const [bathroom, setBathroom] = useState("");
   const [houseSize, setHouseSize] = useState("");
 
+  const stateCityMap = {
+    arizona: ["Flagstaff", "Mesa", "Tucson", "Tempe", "Scottsdale"],
+    california: [
+      "Los Angeles",
+      "Sacramento",
+      "San Diego",
+      "San Francisco",
+      "San Jose",
+    ],
+    texas: ["Austin", "Dallas", "Houston", "Fort Worth", "San Antonio"],
+    "new york": [
+      "Brooklyn",
+      "Buffalo",
+      "Manhattan",
+      "New York City",
+      "Rochester",
+    ],
+    washington: ["Bellevue", "Olympia", "Seattle", "Spokane", "Tacoma"],
+  };
+
   const onSubmit = (e) => {
     e.preventDefault();
 
@@ -27,7 +46,8 @@ const SearchForm = ({
       bathroom: parseFloat(bathroom),
       houseSize: parseFloat(houseSize),
     };
-
+    // console.log("state - ", formData.state);
+    // console.log("city - ", formData.city);
     console.log("Submitted:", formData);
 
     handleSubmit(); // for heatmap
@@ -39,22 +59,41 @@ const SearchForm = ({
       {/* <h2 className="form-title">User Form</h2> */}
 
       <form onSubmit={onSubmit} className="form">
-        <input
-          type="text"
-          placeholder="State"
+        {/* State Dropdown */}
+        <select
           value={selectedState}
-          onChange={(e) => setSelectedState(e.target.value)}
+          onChange={(e) => {
+            setSelectedState(e.target.value);
+            setSelectedCity(""); // reset city on state change
+          }}
           className="input-field"
           required
-        />
-        <input
-          type="text"
-          placeholder="City"
+        >
+          <option value="">Select State</option>
+          {Object.keys(stateCityMap).map((stateKey) => (
+            <option key={stateKey} value={stateKey}>
+              {stateKey.charAt(0).toUpperCase() + stateKey.slice(1)}
+            </option>
+          ))}
+        </select>
+
+        {/* City Dropdown */}
+        <select
           value={selectedCity}
           onChange={(e) => setSelectedCity(e.target.value)}
           className="input-field"
           required
-        />
+          disabled={!selectedState} // disable until a state is selected
+        >
+          <option value="">Select City</option>
+          {selectedState &&
+            stateCityMap[selectedState].map((city) => (
+              <option key={city} value={city.toLowerCase()}>
+                {city}
+              </option>
+            ))}
+        </select>
+
         <input
           type="number"
           placeholder="Acre"
@@ -97,4 +136,3 @@ const SearchForm = ({
 };
 
 export default SearchForm;
-

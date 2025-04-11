@@ -88,7 +88,6 @@ const Chatbot = () => {
         flexDirection: "column",
       }}
     >
-      <h2 className="text-xl font-bold mb-2">Chatbot</h2>
       <div style={{ flex: 1, overflowY: "auto" }}>
         {/* Message List */}
         <div
