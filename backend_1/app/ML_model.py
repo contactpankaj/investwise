@@ -34,11 +34,28 @@ def test_property_price_prediction(beds, baths, acre_lot, house_size, state, sta
 
     try:
         # Load model and metadata
-        model = load_model(os.path.join(BASE_DIR, 'texas_model.h5'))
-        with open(os.path.join(BASE_DIR, 'texas_model_data.pkl'), 'rb') as f:
-            model_data = pickle.load(f)
+        if(state.lower() == 'texas'):
+            model = load_model(os.path.join(BASE_DIR, 'texas.h5'))
+            with open(os.path.join(BASE_DIR, 'texas.pkl'), 'rb') as f:
+                model_data = pickle.load(f)
+        elif(state.lower() == 'california'):
+            model = load_model(os.path.join(BASE_DIR, 'california.h5'))
+            with open(os.path.join(BASE_DIR, 'california.pkl'), 'rb') as f:
+                model_data = pickle.load(f)
+        elif(state.lower() == 'arizona'):
+            model = load_model(os.path.join(BASE_DIR, 'arizona.h5'))
+            with open(os.path.join(BASE_DIR, 'arizona.pkl'), 'rb') as f:
+                model_data = pickle.load(f)
+        elif(state.lower() == 'washington'):
+            model = load_model(os.path.join(BASE_DIR, 'washington.h5'))
+            with open(os.path.join(BASE_DIR, 'washington.pkl'), 'rb') as f:
+                model_data = pickle.load(f)
+        else:
+            model = load_model(os.path.join(BASE_DIR, 'newyork.h5'))
+            with open(os.path.join(BASE_DIR, 'newyork.pkl'), 'rb') as f:
+                model_data = pickle.load(f)
 
-        features = model_data['features']
+        features = model_data['features'] 
         scaler = model_data['scaler']
         seq_length = model_data['seq_length']
         last_sequence = model_data['last_sequence'].copy()
@@ -150,15 +167,7 @@ if __name__ == "__main__":
     else:
         print("10-Year Price Forecast:")
         print(results)
-        # for result in results:
-        #     print(f"Year {result['year']}: ${result['predicted_price']:,.2f}")
-        # print("Historical Averages:")
-        # for item in results["historical"]:
-        #     print(f"Year {item['year']}: ${item['average_price']:,.2f}")
 
-        # print("\n10-Year Price Forecast:")
-        # for item in results["forecast"]:
-        #     print(f"Year {item['year']}: ${item['predicted_price']:,.2f}")
 
 
 
