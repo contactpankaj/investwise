@@ -26,7 +26,7 @@ const App = () => {
   const [locationData, setLocationData] = useState([]);
   const [stateGeoJson, setStateGeoJson] = useState(null);
   const [selectedState, setSelectedState] = useState('texas');
-  const [selectedCity, setSelectedCity] = useState('');
+  const [selectedCity, setSelectedCity] = useState('houston');
   const [geoJsonLoading, setGeoJsonLoading] = useState(false);
   const [histogramData, setHistogramData] = useState(null);
   const [forecastData, setForecastData] = useState([]);
