@@ -97,3 +97,21 @@ export const fetchAcresHistogram = async (state, city) => {
     throw new Error(`Failed to fetch histogram data: ${error.message}`);
   }
 };  
+
+export const fetchHeatmapData = async (city) => {
+  try {
+    const url = `http://localhost:8000/api/heatmap?city=${city}`;
+    const response = await fetch(url);
+    const data = await response.json();
+
+    if (data.error) {
+      throw new Error(data.error);
+    }
+
+    return data;
+  } catch (error) {
+    console.error('Error fetching heatmap data:', error);
+    throw new Error(`Failed to fetch heatmap data: ${error.message}`);
+  }
+};
+

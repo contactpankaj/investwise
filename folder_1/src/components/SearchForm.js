@@ -6,8 +6,8 @@ const SearchForm = ({
   selectedCity,
   setSelectedCity,
   handleSubmit,
-  handleForecast,
   loading,
+  handleForecast,
   geoJsonLoading,
 }) => {
   const [acre, setAcre] = useState("0.15");
@@ -37,33 +37,29 @@ const SearchForm = ({
 
   const onSubmit = (e) => {
     e.preventDefault();
-  
+
     const payload = {
       acre,
       bedroom,
       bathroom,
       houseSize,
-      state: selectedState,   // ✅ Add state
-      city: selectedCity      // optional: if needed for other purposes
+      state: selectedState,
+      city: selectedCity,
     };
 
     handleSubmit(); // for heatmap
-    handleForecast(payload); // for chart
+    handleForecast(payload); // if using forecast
   };
-  
-  
 
   return (
     <div className="form-container">
-      {/* <h2 className="form-title">User Form</h2> */}
-
       <form onSubmit={onSubmit} className="form">
-        {/* State Dropdown */}
+        <label>State</label>
         <select
           value={selectedState}
           onChange={(e) => {
             setSelectedState(e.target.value);
-            setSelectedCity(""); // reset city on state change
+            setSelectedCity("");
           }}
           className="input-field"
           required
@@ -76,13 +72,13 @@ const SearchForm = ({
           ))}
         </select>
 
-        {/* City Dropdown */}
+        <label>City</label>
         <select
           value={selectedCity}
           onChange={(e) => setSelectedCity(e.target.value)}
           className="input-field"
           required
-          disabled={!selectedState} // disable until a state is selected
+          disabled={!selectedState}
         >
           <option value="">Select City</option>
           {selectedState &&
@@ -93,6 +89,7 @@ const SearchForm = ({
             ))}
         </select>
 
+        <label>Acre Lot</label>
         <input
           type="number"
           placeholder="Acre"
@@ -100,6 +97,8 @@ const SearchForm = ({
           onChange={(e) => setAcre(e.target.value)}
           className="input-field"
         />
+
+        <label>Bedrooms</label>
         <input
           type="number"
           placeholder="Number of Bedrooms"
@@ -107,6 +106,8 @@ const SearchForm = ({
           onChange={(e) => setBedroom(e.target.value)}
           className="input-field"
         />
+
+        <label>Bathrooms</label>
         <input
           type="number"
           placeholder="Number of Bathrooms"
@@ -114,6 +115,8 @@ const SearchForm = ({
           onChange={(e) => setBathroom(e.target.value)}
           className="input-field"
         />
+
+        <label>House Size (sqft)</label>
         <input
           type="number"
           placeholder="House Size (sqft)"
