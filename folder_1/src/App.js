@@ -4,24 +4,24 @@ import SearchForm from './components/SearchForm';
 import Chatbot from './components/Chatbot';
 import GraphVisualization from './components/GraphVisualization';
 import HeatMapView from './components/HeatMapView';
-import PlaceholderVisualization from './components/PlaceholderVisualization';
+import AnimatedHomePage from './components/AnimatedHomePage';
+import HeatmapChart from './components/Heatmapchart';
 import AcresHistogram from './components/AcresHistogram';
-import AnimatedHomePage from './components/AnimatedHomePage'; // ✅ Import splash
 
 import {
   fetchPriceData,
   fetchStateZipBoundaries,
   getCityLocation,
-  fetchPriceForecast,
-  fetchAcresHistogram
+  fetchAcresHistogram,
+  fetchHeatmapData,
+  fetchPriceForecast
 } from './services/dataservice';
 
 const App = () => {
-  const [showHome, setShowHome] = useState(true); // 🔥
-
+  const [showHome, setShowHome] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [mapCenter, setMapCenter] = useState([29.7604, -95.3698]); // Houston
+  const [mapCenter, setMapCenter] = useState([29.7604, -95.3698]);
   const [mapZoom, setMapZoom] = useState(10);
   const [locationData, setLocationData] = useState([]);
   const [stateGeoJson, setStateGeoJson] = useState(null);
@@ -30,11 +30,13 @@ const App = () => {
   const [geoJsonLoading, setGeoJsonLoading] = useState(false);
   const [histogramData, setHistogramData] = useState(null);
   const [forecastData, setForecastData] = useState([]);
+  const [heatmapData, setHeatmapData] = useState(null);
 
   const handleSubmit = async () => {
     setLoading(true);
     setError('');
     setHistogramData(null);
+    setHeatmapData(null);
 
     try {
       const cityCoordinates = await getCityLocation(selectedCity, selectedState);
@@ -48,6 +50,9 @@ const App = () => {
 
       const histData = await fetchAcresHistogram(selectedState, selectedCity);
       setHistogramData(histData);
+
+      const heatData = await fetchHeatmapData(selectedCity);
+      setHeatmapData(heatData);
 
       if (!stateGeoJson || stateGeoJson.state !== selectedState) {
         setGeoJsonLoading(true);
@@ -72,20 +77,6 @@ const App = () => {
     }
   };
 
-  // const handleForecast = async ({ acre, bedroom, bathroom, houseSize }) => {
-  //   try {
-  //     const result = await fetchPriceForecast({
-  //       beds: bedroom,
-  //       baths: bathroom,
-  //       acre_lot: acre,
-  //       house_size: houseSize,
-  //       start_year: new Date().getFullYear()
-  //     });
-  //     setForecastData(result);
-  //   } catch (error) {
-  //     console.error('Error fetching forecast:', error.message);
-  //   }
-  // };
   const handleForecast = async ({ acre, bedroom, bathroom, houseSize, state }) => {
     try {
       const result = await fetchPriceForecast({
@@ -102,13 +93,19 @@ const App = () => {
       console.error('Error fetching forecast:', error.message);
     }
   };
-  
-  
 
-  // 👇 Show splash homepage first
   if (showHome) {
     return <AnimatedHomePage onEnter={() => setShowHome(false)} />;
   }
+
+  // Adding some dummy content to ensure we have enough to scroll
+  const dummyContent = (
+    <div style={{ height: '200px', marginTop: '20px', padding: '10px', background: '#334155', borderRadius: '8px' }}>
+      <h3>Additional Information</h3>
+      <p>This is some dummy content to ensure we have enough height to test scrolling.</p>
+      <p>The right column should scroll if the content exceeds the viewport height.</p>
+    </div>
+  );
 
   return (
     <div className="app-container">
@@ -134,7 +131,11 @@ const App = () => {
       {/* RIGHT COLUMN */}
       <div className="right-column">
         <div className="card graph-container">
-          <GraphVisualization forecastData={forecastData} selectedState={selectedState} selectedCity={selectedCity}/>
+          <GraphVisualization
+            forecastData={forecastData}
+            selectedState={selectedState}
+            selectedCity={selectedCity}
+          />
         </div>
         <div className="card heatmap-container">
           <HeatMapView
@@ -146,6 +147,7 @@ const App = () => {
             selectedCity={selectedCity}
           />
         </div>
+        
         <div className="card histogram-container">
           <AcresHistogram
             histogramData={histogramData}
@@ -154,18 +156,19 @@ const App = () => {
             loading={loading}
           />
         </div>
+
+        <div className="card histogram-container">
+          <HeatmapChart
+            heatmapData={heatmapData}
+            selectedCity={selectedCity}
+            loading={loading}
+          />
+          {/* Adding dummy content to test scrolling */}
+          {dummyContent}
+        </div>
       </div>
     </div>
   );
 };
 
 export default App;
-
-
-
-
-
-
-
-
-

@@ -1,15 +1,21 @@
-/* App.css */
+/* Force html and body to take full height and allow scrolling */
+html, body, #root {
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;   /* ✅ allow full screen scroll */
+  background-color: #0f172a;
+}
 
 /* Full-screen two-column layout */
 .app-container {
   display: grid;
   grid-template-columns: 1fr 3fr;
   grid-gap: 16px;
-  height: 100vh; /* force entire app to fit screen */
   padding: 16px;
-  background-color: #0f172a; /* match homepage */
+  background-color: #0f172a;
   color: white;
-  overflow: hidden;
+  box-sizing: border-box;
 }
 
 /* Left column with two vertical sections */
@@ -17,117 +23,77 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  height: 100%;
-  overflow: hidden;
+  height: 100vh;          /* ✅ Keep height fixed to match layout */
+  max-height: 100vh;
+  overflow: hidden;       /* ✅ Prevent scroll unless needed inside children */
 }
+
 
 /* Right column with three rows stacked */
 .right-column {
   display: grid;
-  grid-template-rows: 0.9fr 0.8fr 1.3fr;
-  grid-template-rows: 30% 30% 40%; /* graph, heatmap, placeholder */
+  grid-template-rows: auto auto auto;  /* Let each section size naturally */
   gap: 16px;
-  height: 100%;
-  overflow: hidden;
+  overflow-y: auto; /* ✅ Scrolls when height exceeds page */
 }
 
 /* Reusable card container */
 .card {
-  background-color: #1e293b; /* dark slate card */
+  background-color: #1e293b;
   border: 1px solid #334155;
   border-radius: 0.75rem;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   padding: 16px;
-  overflow: auto; /* scroll within the card if needed */
-  height: 100%;
+  overflow-y: auto;
   color: white;
 }
 
-/* Form container takes ~40% of the left column */
-/* Style for the form container */
-.form-container {
-  width: 100%;
-  max-width: 100%; /* Ensures no max-width limitation */
-  padding: 20px;
-  box-sizing: border-box; /* Include padding in the width */
-  flex: 1
+/* Graph, heatmap, matrix, histogram sections */
+.graph-container,
+.heatmap-container,
+.matrix-container,
+.histogram-container,
+.placeholder-container {
+  overflow-y: auto;
 }
 
-/* Style for form title */
-.form-title {
-  font-size: 1.25rem;
-  font-weight: bold;
-  margin-bottom: 1rem;
+/* Scrollbar for .right-column */
+.right-column::-webkit-scrollbar {
+  width: 8px;
+}
+.right-column::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+.right-column::-webkit-scrollbar-thumb {
+  background-color: #475569;
+  border-radius: 20px;
 }
 
-/* Style for the form */
 .form {
   display: flex;
   flex-direction: column;
-  gap: 10px; /* Adjust the spacing between inputs */
+  gap: 10px;
   width: 100%;
 }
 
-/* Style for the select field (in form) */
 .input-field {
-  display: block;       
-  width: 100%;          
-  padding: 5px;
-  margin-bottom: 5px;   
+  padding: 8px;
+  margin-top: 4px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  box-sizing: border-box; 
 }
 
-/* Style for the submit button */
 .submit-button {
-  background-color: #1d4ed8; /* Blue color */
-  color: white;
+  margin-top: 8px;
   padding: 10px 15px;
+  background-color: #1d4ed8;
+  color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  width: 100%;
-  font-size: 1rem;
 }
 
 .submit-button:hover {
   background-color: #2563eb;
 }
 
-.submit-button:disabled {
-  background-color: #dbeafe; /* Lighter blue */
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-/* Chatbot fills the rest */
-.chatbot-container {
-  flex: 1;
-  overflow: auto;
-}
-
-/* Graph, heatmap, histogram layout */
-.graph-container,
-.heatmap-container,
-.placeholder-container,
-.histogram-container {
-  overflow: auto;
-}
-
-/* Optional: Ensure histogram gets enough vertical room */
-.histogram-container {
-  min-height: 0; /* allow it to shrink inside the grid */
-  display: flex;
-  flex-direction: column;
-}
-
-/* Global body defaults */
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  background-color: #0f172a;
-  color: white;
-}
