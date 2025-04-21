@@ -1,0 +1,99 @@
+/* Force html and body to take full height and allow scrolling */
+html, body, #root {
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;   /* ✅ allow full screen scroll */
+  background-color: #0f172a;
+}
+
+/* Full-screen two-column layout */
+.app-container {
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  grid-gap: 16px;
+  padding: 16px;
+  background-color: #0f172a;
+  color: white;
+  box-sizing: border-box;
+}
+
+/* Left column with two vertical sections */
+.left-column {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100vh;          /* ✅ Keep height fixed to match layout */
+  max-height: 100vh;
+  overflow: hidden;       /* ✅ Prevent scroll unless needed inside children */
+}
+
+
+/* Right column with three rows stacked */
+.right-column {
+  display: grid;
+  grid-template-rows: auto auto auto;  /* Let each section size naturally */
+  gap: 16px;
+  overflow-y: auto; /* ✅ Scrolls when height exceeds page */
+}
+
+/* Reusable card container */
+.card {
+  background-color: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  padding: 16px;
+  overflow-y: auto;
+  color: white;
+}
+
+/* Graph, heatmap, matrix, histogram sections */
+.graph-container,
+.heatmap-container,
+.matrix-container,
+.histogram-container,
+.placeholder-container {
+  overflow-y: auto;
+}
+
+/* Scrollbar for .right-column */
+.right-column::-webkit-scrollbar {
+  width: 8px;
+}
+.right-column::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+.right-column::-webkit-scrollbar-thumb {
+  background-color: #475569;
+  border-radius: 20px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.input-field {
+  padding: 8px;
+  margin-top: 4px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.submit-button {
+  margin-top: 8px;
+  padding: 10px 15px;
+  background-color: #1d4ed8;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.submit-button:hover {
+  background-color: #2563eb;
+}
+
