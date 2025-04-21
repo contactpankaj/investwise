@@ -8,6 +8,11 @@ from app.data_processing import process_csv_data
 # Initialize FastAPI app
 app = FastAPI(title="House Price API")
 
+origins = [
+    "https://investwise0001.netlify.app",  # ✅ your Netlify frontend
+    "http://localhost:3000",               # for local dev
+]
+
 # Enable CORS
 app.add_middleware(
     CORSMiddleware,
