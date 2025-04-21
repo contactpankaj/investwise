@@ -32,11 +32,21 @@
     </div>
 
     <div class="main-content">
-        <h2>Visualizations</h2>
-        <div id="viz1" class="viz"></div>
-        <div id="viz2" class="viz"></div>
-        <div id="viz3" class="viz"></div>
-    </div>
+      <button id="toggleDashboard" style="margin-bottom: 10px;">Toggle Dashboard</button>
+  
+      <div id="dashboard1" class="dashboard">
+          <h2>Visualizations</h2>
+          <div id="viz1" class="viz"></div>
+          <div id="viz2" class="viz"></div>
+          <div id="viz3" class="viz"></div>
+      </div>
+  
+      <div id="dashboard2" class="dashboard" style="display: none;">
+          <h2>Secondary Dashboard (Blank)</h2>
+          <div class="viz">This space is intentionally left blank.</div>
+      </div>
+  </div>
+  
 
     <!-- Load visualization logic -->
     <!-- <script src="viz1.js"></script>

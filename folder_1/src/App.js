@@ -31,6 +31,7 @@ const App = () => {
   const [histogramData, setHistogramData] = useState(null);
   const [forecastData, setForecastData] = useState([]);
   const [heatmapData, setHeatmapData] = useState(null);
+  const [activeDashboard, setActiveDashboard] = useState('A');
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -87,8 +88,8 @@ const App = () => {
         state: state,
         start_year: new Date().getFullYear()
       });
-  
-      setForecastData(result.forecast);  // assuming backend returns { forecast: [...] }
+
+      setForecastData(result.forecast); // assuming backend returns { forecast: [...] }
     } catch (error) {
       console.error('Error fetching forecast:', error.message);
     }
@@ -98,7 +99,6 @@ const App = () => {
     return <AnimatedHomePage onEnter={() => setShowHome(false)} />;
   }
 
-  // Adding some dummy content to ensure we have enough to scroll
   const dummyContent = (
     <div style={{ height: '200px', marginTop: '20px', padding: '10px', background: '#334155', borderRadius: '8px' }}>
       <h3>Additional Information</h3>
@@ -130,42 +130,64 @@ const App = () => {
 
       {/* RIGHT COLUMN */}
       <div className="right-column">
-        <div className="card graph-container">
-          <GraphVisualization
-            forecastData={forecastData}
-            selectedState={selectedState}
-            selectedCity={selectedCity}
-          />
-        </div>
-        <div className="card heatmap-container">
-          <HeatMapView
-            mapCenter={mapCenter}
-            mapZoom={mapZoom}
-            stateGeoJson={stateGeoJson}
-            locationData={locationData}
-            selectedState={selectedState}
-            selectedCity={selectedCity}
-          />
-        </div>
-        
-        <div className="card histogram-container">
-          <AcresHistogram
-            histogramData={histogramData}
-            selectedState={selectedState}
-            selectedCity={selectedCity}
-            loading={loading}
-          />
+        <div className="card">
+          <button
+            onClick={() => setActiveDashboard(prev => (prev === 'A' ? 'B' : 'A'))}
+            style={{
+              padding: '10px',
+              backgroundColor: '#2563eb',
+              color: 'white',
+              border: 'none',
+              borderRadius: '6px',
+              cursor: 'pointer'
+            }}
+          >
+            Switch to Dashboard {activeDashboard === 'A' ? 'B' : 'A'}
+          </button>
         </div>
 
-        <div className="card histogram-container">
-          <HeatmapChart
-            heatmapData={heatmapData}
-            selectedCity={selectedCity}
-            loading={loading}
-          />
-          {/* Adding dummy content to test scrolling */}
-          {dummyContent}
-        </div>
+        {activeDashboard === 'A' ? (
+          <>
+            <div className="card graph-container">
+              <GraphVisualization
+                forecastData={forecastData}
+                selectedState={selectedState}
+                selectedCity={selectedCity}
+              />
+            </div>
+            <div className="card heatmap-container">
+              <HeatMapView
+                mapCenter={mapCenter}
+                mapZoom={mapZoom}
+                stateGeoJson={stateGeoJson}
+                locationData={locationData}
+                selectedState={selectedState}
+                selectedCity={selectedCity}
+              />
+            </div>
+            <div className="card histogram-container">
+              <AcresHistogram
+                histogramData={histogramData}
+                selectedState={selectedState}
+                selectedCity={selectedCity}
+                loading={loading}
+              />
+            </div>
+            <div className="card histogram-container">
+              <HeatmapChart
+                heatmapData={heatmapData}
+                selectedCity={selectedCity}
+                loading={loading}
+              />
+              {dummyContent}
+            </div>
+          </>
+        ) : (
+          <div className="card">
+            <h3>Blank Dashboard</h3>
+            <p>You can add more visualizations here later.</p>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -110,4 +110,19 @@ messages.push(botMessage);
         console.error("Error contacting chatbot API:", error);
     }
   }
+
+const toggleButton = document.getElementById('toggleDashboard');
+const dashboard1 = document.getElementById('dashboard1');
+const dashboard2 = document.getElementById('dashboard2');
+
+toggleButton.addEventListener('click', () => {
+  if (dashboard1.style.display === 'none') {
+    dashboard1.style.display = 'block';
+    dashboard2.style.display = 'none';
+  } else {
+    dashboard1.style.display = 'none';
+    dashboard2.style.display = 'block';
+  }
+});
+
   
