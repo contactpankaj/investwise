@@ -7,6 +7,9 @@ import HeatMapView from "./components/HeatMapView";
 import AnimatedHomePage from "./components/AnimatedHomePage";
 import HeatmapChart from "./components/Heatmapchart";
 import AcresHistogram from "./components/AcresHistogram";
+// import React, { useState } from "react";
+// import "./App.css";
+import ImageCarouselModal from "./components/ImageCarouselModal.js"; // Add this import
 
 import {
   fetchPriceData,
@@ -16,6 +19,8 @@ import {
   fetchHeatmapData,
   fetchPriceForecast,
 } from "./services/dataservice";
+
+
 
 const App = () => {
   const [showHome, setShowHome] = useState(true);
@@ -32,6 +37,20 @@ const App = () => {
   const [forecastData, setForecastData] = useState([]);
   const [heatmapData, setHeatmapData] = useState(null);
   const [activeTab, setActiveTab] = useState("visualizations");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentImages, setCurrentImages] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const openModal = (images, index = 0) => {
+    setCurrentImages(images);
+    setCurrentIndex(index);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => setIsModalOpen(false);
+  const nextImage = () => setCurrentIndex((prev) => (prev + 1) % currentImages.length);
+  const prevImage = () => setCurrentIndex((prev) => (prev - 1 + currentImages.length) % currentImages.length);
+
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -207,39 +226,44 @@ const App = () => {
           </>
         )}
 
-        {activeTab === "listings" && (
-          <div className="card listings-container">
-            <h2>
-              Listings in {selectedCity}, {selectedState}
-            </h2>
-            <div className="listings-grid">
-              {locationData.length === 0 ? (
-                <p>No listings found. Submit a search to view data.</p>
-              ) : (
-                locationData.map((listing, index) => (
-                  <div key={index} className="listing-card">
-                    <p>
-                      <strong>Price:</strong> ${listing.price}
-                    </p>
-                    <p>
-                      <strong>Bedrooms:</strong> {listing.beds}
-                    </p>
-                    <p>
-                      <strong>Bathrooms:</strong> {listing.baths}
-                    </p>
-                    <p>
-                      <strong>Acre Lot:</strong> {listing.acre_lot}
-                    </p>
-                    <p>
-                      <strong>House Size:</strong> {listing.house_size} sqft
-                    </p>
-                    {/* Add more details as needed */}
-                  </div>
-                ))
-              )}
-            </div>
+{activeTab === "listings" && (
+  <div className="card listings-container">
+    <h2>
+      Listings in {selectedCity}, {selectedState}
+    </h2>
+    <div className="listings-grid">
+      {locationData.length === 0 ? (
+        <p>No listings found. Submit a search to view data.</p>
+      ) : (
+        locationData.map((listing, index) => (
+          <div
+            key={index}
+            className="listing-card"
+            onClick={() => openModal(listing.image_urls || [], 0)}
+          >
+            <img
+              src={listing.image_urls?.[0] || "https://via.placeholder.com/150"}
+              alt="House"
+              style={{ width: "100%", height: "150px", borderRadius: "8px", objectFit: "cover" }}
+            />
+            <p><strong>Price:</strong> ${listing.price}</p>
+            <p><strong>Bedrooms:</strong> {listing.beds}</p>
+            <p><strong>Bathrooms:</strong> {listing.baths}</p>
           </div>
-        )}
+        ))
+      )}
+    </div>
+    {isModalOpen && (
+      <ImageCarouselModal
+        images={currentImages}
+        currentIndex={currentIndex}
+        onClose={closeModal}
+        onNext={nextImage}
+        onPrev={prevImage}
+      />
+    )}
+  </div>
+)}
       </div>
     </div>
   );

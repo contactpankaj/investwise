@@ -97,3 +97,23 @@ html, body, #root {
   background-color: #2563eb;
 }
 
+.listings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.listing-card {
+  background-color: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 10px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.listing-card:hover {
+  transform: scale(1.02);
+}
+
+
