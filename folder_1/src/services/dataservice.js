@@ -269,6 +269,43 @@ export const fetchHeatmapData = async (city) => {
   }
 };
 
+export const fetchScatterData = async (city, state) => {
+  try {
+    const url = `${backendBaseURL}/api/scatterplot?state=${state}&city=${city}`;
+    const response = await fetch(url);
+    const data = await response.json();
+
+    if (data.error) {
+      throw new Error(data.error);
+    }
+
+    return data;
+  } catch (error) {
+    console.error('Error fetching scatterplot data:', error);
+    throw new Error(`Failed to fetch scatterplot data: ${error.message}`);
+  }
+};
+
+export const fetchPricePerSqft = async (state) => {
+  try {
+    const url = `${backendBaseURL}/api/price-per-sqft?state=${state}`;
+    const response = await fetch(url);
+    const data = await response.json();
+
+    if (data.error) {
+      throw new Error(data.error);
+    }
+
+    return data;
+  } catch (error) {
+    console.error('Error fetching price per sqft data:', error);
+    throw new Error(`Failed to fetch price-per-sqft data: ${error.message}`);
+  }
+};
+
+
+
+
 
 // Fetch places count (hospitals, groceries) from API
 export const fetchPlacesCount = async (state, city, category) => {

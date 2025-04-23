@@ -8,6 +8,11 @@ import AnimatedHomePage from './components/AnimatedHomePage';
 import HeatmapChart from './components/Heatmapchart';
 import AcresHistogram from './components/AcresHistogram';
 // import AnimatedHomePage from './components/AnimatedHomePage';
+import ScatterplotChart from './components/ScatterplotChat';
+import { fetchScatterData } from './services/dataservice';
+import PricePerSqftChart from './components/PricePerSqftChart';
+import { fetchPricePerSqft } from './services/dataservice';
+
 
 import {
   fetchPriceData,
@@ -34,13 +39,16 @@ const App = () => {
   const [forecastData, setForecastData] = useState([]);
   const [heatmapData, setHeatmapData] = useState(null);
   const [selectedDataType, setSelectedDataType] = useState('Price');
-  
-  const categoryMap = {
-    'Hospitals': 'hospital', // Match backend query parameter
-    'Groceries': 'grocery'   // Match backend query parameter
-  };
+  const [scatterData, setScatterData] = useState([]);
+  const [priceSqftData, setPriceSqftData] = useState([]);
+
 
   const handleSubmit = async () => {
+    const categoryMap = {
+      'Hospitals': 'hospital',
+      'Groceries': 'grocery_or_supermarket',
+    };
+  
     setLoading(true);
     setError('');
     setHistogramData(null);
@@ -74,6 +82,14 @@ const App = () => {
 
       const heatData = await fetchHeatmapData(selectedCity);
       setHeatmapData(heatData);
+
+      const scatterPlot = await fetchScatterData(selectedCity, selectedState);
+      setScatterData(scatterPlot.scatter_data);
+
+      const sqftData = await fetchPricePerSqft(selectedState);
+      setPriceSqftData(sqftData.chart_data);
+
+
 
       
       // Load or update GeoJSON data for the state
@@ -194,6 +210,22 @@ const App = () => {
           {/* Adding dummy content to test scrolling */}
           {dummyContent}
         </div>
+        <div className="card histogram-container">
+        <ScatterplotChart
+          scatterData={scatterData}
+          selectedCity={selectedCity}
+          loading={loading}
+        />
+      </div>
+      <div className="card histogram-container">
+  <PricePerSqftChart
+    chartData={priceSqftData}
+    selectedState={selectedState}
+    loading={loading}
+  />
+</div>
+
+
       </div>
       
       {/* Error message display */}
