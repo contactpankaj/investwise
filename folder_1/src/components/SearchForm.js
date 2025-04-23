@@ -5,8 +5,6 @@ const SearchForm = ({
   setSelectedState,
   selectedCity,
   setSelectedCity,
-  selectedDataType,
-  setSelectedDataType,
   handleSubmit,
   loading,
   handleForecast,
@@ -100,20 +98,6 @@ const SearchForm = ({
         </div>
 
 
-        <div>
-          <label htmlFor="datatype-select" className="form-label">Heatmap Data:</label>
-          <select
-            id="datatype-select"
-            value={selectedDataType}
-            onChange={(e) => setSelectedDataType(e.target.value)}
-            className="input-field"
-            required
-          >
-            <option value="Price">Price</option>
-            <option value="Hospitals">Hospitals</option>
-            <option value="Groceries">Groceries</option>
-          </select>
-        </div>
 
         <div>
           <label htmlFor="acre-input" className="form-label">Acre:</label>

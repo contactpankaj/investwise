@@ -148,27 +148,7 @@ const App = () => {
   }
 
   // Adding some dummy content to ensure we have enough to scroll
-  const dummyContent = (
-    <div
-      style={{
-        height: "200px",
-        marginTop: "20px",
-        padding: "10px",
-        background: "#334155",
-        borderRadius: "8px",
-      }}
-    >
-      <h3>Additional Information</h3>
-      <p>
-        This is some dummy content to ensure we have enough height to test
-        scrolling.
-      </p>
-      <p>
-        The right column should scroll if the content exceeds the viewport
-        height.
-      </p>
-    </div>
-  );
+
 
   return (
     <div className="app-container">
@@ -180,12 +160,8 @@ const App = () => {
             setSelectedState={setSelectedState}
             selectedCity={selectedCity}
             setSelectedCity={setSelectedCity}
-            selectedDataType={selectedDataType}
-            setSelectedDataType={setSelectedDataType}
             handleSubmit={handleSubmit}
             handleForecast={handleForecast}
-            loading={loading}
-            geoJsonLoading={geoJsonLoading}
           />
         </div>
         <div className="card chatbot-container">
@@ -195,81 +171,110 @@ const App = () => {
 
       {/* RIGHT COLUMN */}
       <div className="right-column">
-        <div className="tab-bar">
-          <button
-            className={activeTab === "visualizations" ? "active-tab" : ""}
-            onClick={() => setActiveTab("visualizations")}
-          >
-            Visualizations
-          </button>
-          <button
-            className={activeTab === "listings" ? "active-tab" : ""}
-            onClick={() => setActiveTab("listings")}
-          >
-            Listings
-          </button>
-        </div>
+      {/* Always show graph at the top */}
+      <div className="card graph-container">
+        <GraphVisualization
+          forecastData={forecastData}
+          selectedState={selectedState}
+          selectedCity={selectedCity}
+        />
+      </div>
 
-        {activeTab === "visualizations" && (
+      {/* Tab controls for switching visual content */}
+      <div className="card visualization-container">
+      {/* Ribbon Tabs (Top Border Tabs) */}
+      <div className="ribbon-tabs">
+        <button
+          className={activeTab === "heatmap" ? "active-tab" : ""}
+          onClick={() => setActiveTab("heatmap")}
+        >
+          Heatmap
+        </button>
+        <button
+          className={activeTab === "histogram" ? "active-tab" : ""}
+          onClick={() => setActiveTab("histogram")}
+        >
+          Acres Histogram
+        </button>
+        <button
+          className={activeTab === "forecast-heatmap" ? "active-tab" : ""}
+          onClick={() => setActiveTab("forecast-heatmap")}
+        >
+          Heatmap Chart
+        </button>
+        <button
+          className={activeTab === "scatter" ? "active-tab" : ""}
+          onClick={() => setActiveTab("scatter")}
+        >
+          Scatter Plot
+        </button>
+        <button
+          className={activeTab === "priceSqft" ? "active-tab" : ""}
+          onClick={() => setActiveTab("priceSqft")}
+        >
+          Price/Sqft
+        </button>
+        <button
+          className={activeTab === "listings" ? "active-tab" : ""}
+          onClick={() => setActiveTab("listings")}
+        >
+          Listings
+        </button>
+      </div>
+
+      {/* Visualization content below ribbon */}
+      <div className="visualization-content">
+        {activeTab === "heatmap" && (
+          <HeatMapView
+            mapCenter={mapCenter}
+            mapZoom={mapZoom}
+            stateGeoJson={stateGeoJson}
+            locationData={locationData}
+            selectedState={selectedState}
+            selectedCity={selectedCity}
+            selectedDataType={selectedDataType}
+            setSelectedDataType={setSelectedDataType}
+            loading={loading || geoJsonLoading}
+          />
+        )}
+
+        {activeTab === "histogram" && (
+          <AcresHistogram
+            histogramData={histogramData}
+            selectedState={selectedState}
+            selectedCity={selectedCity}
+            loading={loading}
+          />
+        )}
+
+        {activeTab === "forecast-heatmap" && (
           <>
-            <div className="card graph-container">
-              <GraphVisualization
-                forecastData={forecastData}
-                selectedState={selectedState}
-                selectedCity={selectedCity}
-              />
-            </div>
-            <div className="card heatmap-container">
-              <HeatMapView
-                mapCenter={mapCenter}
-                mapZoom={mapZoom}
-                stateGeoJson={stateGeoJson}
-                locationData={locationData}
-                selectedState={selectedState}
-                selectedCity={selectedCity}
-                selectedDataType={selectedDataType}
-                setSelectedDataType={setSelectedDataType}
-                loading={loading || geoJsonLoading}
-              />
-            </div>
-            <div className="card histogram-container">
-              <AcresHistogram
-                histogramData={histogramData}
-                selectedState={selectedState}
-                selectedCity={selectedCity}
-                loading={loading}
-              />
-            </div>
-            <div className="card histogram-container">
-              <HeatmapChart
-                heatmapData={heatmapData}
-                selectedCity={selectedCity}
-                loading={loading}
-              />
-              {dummyContent}
-            </div>
-            <div className="card histogram-container">
-              <ScatterplotChart
-                scatterData={scatterData}
-                selectedCity={selectedCity}
-                loading={loading}
-              />
-            </div>
-            <div className="card histogram-container">
-              <PricePerSqftChart
-                chartData={priceSqftData}
-                selectedState={selectedState}
-                loading={loading}
-              />
-            </div>
+            <HeatmapChart
+              heatmapData={heatmapData}
+              selectedCity={selectedCity}
+              loading={loading}
+            />
           </>
         )}
 
+        {activeTab === "scatter" && (
+          <ScatterplotChart
+            scatterData={scatterData}
+            selectedCity={selectedCity}
+            loading={loading}
+          />
+        )}
+
+        {activeTab === "priceSqft" && (
+          <PricePerSqftChart
+            chartData={priceSqftData}
+            selectedState={selectedState}
+            loading={loading}
+          />
+        )}
+
         {activeTab === "listings" && (
-          <div
-            className="card listings-container"
-            style={{ margin: 0, padding: 0 }}
-          >
+          <div className="listings-container" style={{ margin: 0, padding: 0 }}>
             <h2 style={{ padding: "20px 0px 0px 0px" }}>
               Listings in {selectedCity}, {selectedState}
             </h2>
@@ -282,7 +287,14 @@ const App = () => {
         )}
       </div>
     </div>
-  );
+
+    </div>
+
+    </div>
+      );
+
+
+
 };
 
 export default App;
