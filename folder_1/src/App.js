@@ -7,9 +7,10 @@ import HeatMapView from "./components/HeatMapView";
 import AnimatedHomePage from "./components/AnimatedHomePage";
 import HeatmapChart from "./components/Heatmapchart";
 import AcresHistogram from "./components/AcresHistogram";
+import ListingsImageCarausel from "./components/ListingsImageCarausel";
+
 // import React, { useState } from "react";
 // import "./App.css";
-import ImageCarouselModal from "./components/ImageCarouselModal.js"; // Add this import
 
 import {
   fetchPriceData,
@@ -19,8 +20,6 @@ import {
   fetchHeatmapData,
   fetchPriceForecast,
 } from "./services/dataservice";
-
-
 
 const App = () => {
   const [showHome, setShowHome] = useState(true);
@@ -48,9 +47,12 @@ const App = () => {
   };
 
   const closeModal = () => setIsModalOpen(false);
-  const nextImage = () => setCurrentIndex((prev) => (prev + 1) % currentImages.length);
-  const prevImage = () => setCurrentIndex((prev) => (prev - 1 + currentImages.length) % currentImages.length);
-
+  const nextImage = () =>
+    setCurrentIndex((prev) => (prev + 1) % currentImages.length);
+  const prevImage = () =>
+    setCurrentIndex(
+      (prev) => (prev - 1 + currentImages.length) % currentImages.length
+    );
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -226,44 +228,19 @@ const App = () => {
           </>
         )}
 
-{activeTab === "listings" && (
-  <div className="card listings-container">
-    <h2>
-      Listings in {selectedCity}, {selectedState}
-    </h2>
-    <div className="listings-grid">
-      {locationData.length === 0 ? (
-        <p>No listings found. Submit a search to view data.</p>
-      ) : (
-        locationData.map((listing, index) => (
-          <div
-            key={index}
-            className="listing-card"
-            onClick={() => openModal(listing.image_urls || [], 0)}
-          >
-            <img
-              src={listing.image_urls?.[0] || "https://via.placeholder.com/150"}
-              alt="House"
-              style={{ width: "100%", height: "150px", borderRadius: "8px", objectFit: "cover" }}
-            />
-            <p><strong>Price:</strong> ${listing.price}</p>
-            <p><strong>Bedrooms:</strong> {listing.beds}</p>
-            <p><strong>Bathrooms:</strong> {listing.baths}</p>
-          </div>
-        ))
-      )}
-    </div>
-    {isModalOpen && (
-      <ImageCarouselModal
-        images={currentImages}
-        currentIndex={currentIndex}
-        onClose={closeModal}
-        onNext={nextImage}
-        onPrev={prevImage}
-      />
-    )}
-  </div>
-)}
+        <div
+          className="card listings-container"
+          style={{ margin: 0, padding: 0 }}
+        >
+          <h2 style={{ padding: "20px 0px 0px 0px" }}>
+            Listings in {selectedCity}, {selectedState}
+          </h2>
+          <ListingsImageCarausel
+            rows={2}
+            cols={2}
+            folderNames={["home_1", "home_2", "home_3", "home_4"]}
+          />
+        </div>
       </div>
     </div>
   );
