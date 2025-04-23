@@ -277,3 +277,14 @@ html, body, #root {
   background-color: rgba(0, 0, 0, 0.7);
 }
 
+.carousel-image-counter-overlay {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+}

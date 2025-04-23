@@ -12,15 +12,31 @@ const ImageCarouselCell = ({ folderName, onClickImage }) => {
     setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
   };
 
+//   <img
+//   src={images[currentIndex]}
+//   alt={`Image ${currentIndex + 1}`}
+//   className="carousel-image"
+//   onClick={() => onClickImage(images, currentIndex)} // trigger popup
+//   style={{ cursor: "pointer" }}
+// />
+
   return (
     <div className="carousel-cell">
-      <img
-        src={images[currentIndex]}
-        alt={`Image ${currentIndex + 1}`}
-        className="carousel-image"
-        onClick={() => onClickImage(images, currentIndex)} // trigger popup
-        style={{ cursor: "pointer" }}
-      />
+     <div style={{ position: "relative" }}>
+        <img
+          src={images[currentIndex]}
+          alt={`Image ${currentIndex + 1}`}
+          className="carousel-image"
+          onClick={() => onClickImage(images, currentIndex)}
+          style={{ cursor: "pointer" }}
+        />
+
+        {/* Image counter overlaid on image */}
+        <div className="carousel-image-counter-overlay">
+          {currentIndex + 1} / {images.length}
+        </div>
+      </div>
+       
       <div className="carousel-controls">
         <button onClick={prevImage}>←</button>
         <button onClick={nextImage}>→</button>
