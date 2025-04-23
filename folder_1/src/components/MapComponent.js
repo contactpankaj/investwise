@@ -4,7 +4,7 @@ import 'leaflet/dist/leaflet.css';
 import { getColorBasedOnPrice } from '../utils/colorutils';
 import { filterGeoJson } from '../utils/maputils';
 
-// Map updater component to change view
+// Helper to update map center/zoom
 const MapUpdater = ({ center, zoom }) => {
   const map = useMap();
   useEffect(() => {
@@ -15,21 +15,20 @@ const MapUpdater = ({ center, zoom }) => {
   return null;
 };
 
-const MapComponent = ({ 
-  mapCenter, 
-  mapZoom, 
-  stateGeoJson, 
-  locationData, 
-  selectedState, 
+const MapComponent = ({
+  mapCenter,
+  mapZoom,
+  stateGeoJson,
+  locationData,
+  selectedState,
   selectedCity,
-  selectedDataType 
+  selectedDataType
 }) => {
-  // Style function for GeoJSON
+  // Style for ZIP areas with data
   const zipStyle = (feature) => {
-    // Find the zip code in our data
     const zipCode = feature.properties.ZCTA5CE10;
     const zipData = locationData.find(item => String(item.zip) === zipCode);
-    
+
     if (!zipData) {
       return {
         fillColor: '#CCCCCC',
@@ -39,8 +38,7 @@ const MapComponent = ({
         fillOpacity: 0.7
       };
     }
-    
-    // All data types now use the "value" property for color calculation
+
     return {
       fillColor: getColorBasedOnPrice(zipData.value),
       weight: 1,
@@ -49,59 +47,68 @@ const MapComponent = ({
       fillOpacity: 0.7
     };
   };
-  
-  // Add tooltips to each ZIP code area
+
+  // Tooltip per ZIP region
   const onEachFeature = (feature, layer) => {
     const zipCode = feature.properties.ZCTA5CE10;
     const zipData = locationData.find(item => String(item.zip) === zipCode);
-    
+
     let tooltipContent = `<strong>ZIP: ${zipCode}</strong><br />`;
-    
+
     if (zipData) {
       if (selectedDataType === 'Price') {
         tooltipContent += `Average Price: $${zipData.raw_value ? zipData.raw_value.toLocaleString() : zipData.value.toLocaleString()}`;
       } else if (selectedDataType === 'Hospitals' || selectedDataType === 'Groceries') {
-        const categoryName = selectedDataType === 'Hospitals' ? 'Hospitals' : 'Groceries';
-        tooltipContent += `${categoryName} Count: ${zipData.raw_value || 0}<br />`;
-        
+        const label = selectedDataType === 'Hospitals' ? 'Hospitals' : 'Groceries';
+        tooltipContent += `${label} Count: ${zipData.raw_value || 0}`;
       } else {
         tooltipContent += `Value: ${zipData.value.toFixed(2)}`;
       }
     } else {
       tooltipContent += `No data available`;
     }
-    
+
     layer.bindTooltip(`<div>${tooltipContent}</div>`, { sticky: true });
   };
 
-  // Create a key that changes when relevant data changes to force GeoJSON re-render
-  const geoJsonKey = `${selectedState}-${selectedCity}-${selectedDataType}-${locationData ? locationData.length : 0}`;
+  const geoJsonKey = `${selectedState}-${selectedCity}-${selectedDataType}-${locationData?.length || 0}`;
 
-  // Handle case where locationData is not an array
   if (!Array.isArray(locationData)) {
     console.error("locationData is not an array:", locationData);
     return <div className="error-message">Error: Invalid map data.</div>;
   }
 
+  // Default style for boundaries when no data is present
+  const baseStyle = {
+    color: '#888',
+    weight: 1,
+    fillOpacity: 0
+  };
+
   return (
-    <MapContainer 
-      center={mapCenter} 
-      zoom={mapZoom} 
+    <MapContainer
+      center={mapCenter}
+      zoom={mapZoom}
       style={{ height: '100%', width: '100%' }}
       scrollWheelZoom={false}
     >
-      <TileLayer 
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" 
+      <TileLayer
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       />
+
       <MapUpdater center={mapCenter} zoom={mapZoom} />
-      
-      {stateGeoJson && locationData && locationData.length > 0 && (
-        <GeoJSON 
+
+      {stateGeoJson && (
+        <GeoJSON
           key={geoJsonKey}
-          data={filterGeoJson(stateGeoJson, locationData, selectedState, selectedCity) || stateGeoJson}
-          style={zipStyle}
-          onEachFeature={onEachFeature}
+          data={
+            locationData.length > 0
+              ? filterGeoJson(stateGeoJson, locationData, selectedState, selectedCity) || stateGeoJson
+              : stateGeoJson
+          }
+          style={locationData.length > 0 ? zipStyle : baseStyle}
+          onEachFeature={locationData.length > 0 ? onEachFeature : undefined}
         />
       )}
     </MapContainer>

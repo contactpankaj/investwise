@@ -111,7 +111,8 @@ async def get_acres_histogram(
 
         # Process acres data
         acres = filtered['house_size'].dropna()
-        acres = acres[acres > 0]  # Remove zero or negative values
+        acres = acres[(acres > 0) & (acres <= 10000)]  # Only keep values in (0, 10]
+
         
         if acres.empty:
             # print(f"No valid acre data for {city}, {state}")

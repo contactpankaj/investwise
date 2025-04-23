@@ -120,10 +120,13 @@ const AcresHistogram = ({ histogramData, selectedState, selectedCity, loading })
           maxTicksLimit: tickSettings.maxTicksLimit || 10,
           precision: tickSettings.precision || 1,
           callback: function (value, index) {
+            const originalLabel = this.getLabelForValue(value); // Get the actual bin label (e.g., "1.0")
+            const numericValue = parseFloat(originalLabel); 
+    
             if (histogramData?.frequencies?.length > 20) {
               if (index % 2 !== 0 && index !== histogramData.frequencies.length - 1) return null;
             }
-            return this.getLabelForValue(value);
+            return (numericValue / 1000).toFixed(2);
           }
         },
         afterTickToLabelConversion: (data) => {

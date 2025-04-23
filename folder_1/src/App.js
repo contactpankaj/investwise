@@ -44,10 +44,12 @@ const App = () => {
   const [selectedDataType, setSelectedDataType] = useState('Price');
   const [scatterData, setScatterData] = useState([]);
   const [priceSqftData, setPriceSqftData] = useState([]);
+  const [hasSubmitted, setHasSubmitted] = useState(false);
 
-  const [activeTab, setActiveTab] = useState("visualizations");
+  const [activeTab, setActiveTab] = useState("heatmap"); 
 
   const handleSubmit = async () => {
+    setHasSubmitted(true);
     const categoryMap = {
       'Hospitals': 'hospital',
       'Groceries': 'grocery_or_supermarket',
@@ -235,6 +237,7 @@ const App = () => {
             selectedDataType={selectedDataType}
             setSelectedDataType={setSelectedDataType}
             loading={loading || geoJsonLoading}
+            hasSubmitted={hasSubmitted}
           />
         )}
 
