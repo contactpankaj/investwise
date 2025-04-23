@@ -50,27 +50,35 @@ const HeatmapChart = ({ heatmapData, selectedCity, loading }) => {
   const yLabels = heatmapData.baths.map(Number);
 
   const matrixData = [];
-  let maxValue = 0;
+  let minValue = heatmapData.metadata?.min_price || 0;
+  let maxValue = heatmapData.metadata?.max_price || 0;
 
   heatmapData.matrix.forEach((row) => {
     xLabels.forEach((bed) => {
       const value = row[bed];
-      if (value && value > 0) {
+      if (value !== undefined) {
         matrixData.push({
           x: bed,
           y: row.bath,
           v: value,
         });
-        if (value > maxValue) maxValue = value;
       }
     });
   });
 
   const getHeatmapColor = (value) => {
-    const ratio = value / maxValue;
+    // Ensure value is a number and handle edge case
+    const numberValue = Number(value);
+    if (isNaN(numberValue) || maxValue === minValue) return 'rgba(255, 255, 255, 0.8)';
+    
+    // Calculate normalized value between 0 and 1
+    const normalized = Math.max(0, Math.min(1, (numberValue - minValue) / (maxValue - minValue)));
+    
+    // Color gradient from light yellow to deep red
     const r = 255;
-    const g = Math.floor(200 - ratio * 150); // fade green
-    const b = Math.floor(200 - ratio * 200); // fade blue
+    const g = Math.floor(255 - normalized * 200);
+    const b = Math.floor(200 - normalized * 200);
+    
     return `rgba(${r}, ${g}, ${b}, 0.8)`;
   };
 
@@ -79,7 +87,7 @@ const HeatmapChart = ({ heatmapData, selectedCity, loading }) => {
       {
         label: 'Average Price',
         data: matrixData,
-        backgroundColor: (ctx) => getHeatmapColor(ctx.raw.v),
+        backgroundColor: (ctx) => getHeatmapColor(ctx.raw?.v),
         borderWidth: 1,
         width: ({ chart }) => {
           if (!chart.chartArea) return 10;
@@ -129,13 +137,53 @@ const HeatmapChart = ({ heatmapData, selectedCity, loading }) => {
       <h4 className="text-base font-bold mb-4 text-left">
         Average Property Price in {selectedCity}
       </h4>
-      <div style={{ height: '280px' }}>
-        <Chart
-          key={`heatmap-${selectedCity}`}
-          type="matrix"
-          data={chartData}
-          options={options}
-        />
+      
+      <div style={{ display: 'flex', alignItems: 'stretch' }}>
+        {/* Chart container */}
+        <div style={{ height: '260px', width: '94%' }}>
+          <Chart
+            key={`heatmap-${selectedCity}`}
+            type="matrix"
+            data={chartData}
+            options={options}
+          />
+        </div>
+       {/* Full-height color scale on the right */}
+<div style={{ 
+  width: '6%', 
+  display: 'flex', 
+  flexDirection: 'column',
+  alignItems: 'center',
+  marginLeft: '16px'
+}}>
+  <div style={{ 
+    height: '244.4px',  // Match exactly to chart height
+    display: 'flex',
+    alignItems: 'stretch'
+  }}>
+    {/* Color bar */}
+    <div style={{ 
+      width: '10px', 
+      background: 'linear-gradient(to bottom, #ff3300, #ffaa00, #ffffcc)',
+      borderRadius: '2px',
+      marginRight: '6px'
+    }}></div>
+
+    {/* Right-side labels */}
+    <div style={{ 
+      display: 'flex', 
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+      fontSize: '10px',
+      marginLeft: '0px'
+    }}>
+      <div style={{ whiteSpace: 'nowrap' }}>$2 Mn</div>
+      <div>$0</div>
+    </div>
+  </div>
+</div>
+
+        
       </div>
     </div>
   );

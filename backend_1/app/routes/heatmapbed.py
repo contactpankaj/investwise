@@ -26,6 +26,9 @@ async def get_heatmap(
         df['bath'] = df['bath'].astype(int)
         df['city'] = df['city'].str.lower().str.strip()
 
+        # Filter to only include up to 6 beds and 6 baths
+        df = df[(df['bed'] <= 6) & (df['bath'] <= 6)]
+        
         city = city.lower().strip()
         city_df = df[df['city'] == city]
 
@@ -38,6 +41,10 @@ async def get_heatmap(
         pivot_table = pivot_table.reindex(index=sorted_baths, columns=sorted_beds, fill_value=0)
         pivot_json = pivot_table.reset_index().to_dict(orient='records')
 
+        # Calculate min and max for the color scale
+        min_price = pivot_table.values.min()
+        max_price = pivot_table.values.max()
+
         return JSONResponse(content={
             "city": city,
             "matrix": pivot_json,
@@ -46,7 +53,9 @@ async def get_heatmap(
             "metadata": {
                 "x_label": "Bedrooms",
                 "y_label": "Bathrooms",
-                "metric": "average_price"
+                "metric": "average_price",
+                "min_price": min_price,
+                "max_price": max_price
             }
         })
 

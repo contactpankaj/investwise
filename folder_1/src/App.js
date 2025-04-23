@@ -7,6 +7,11 @@ import HeatMapView from './components/HeatMapView';
 import AnimatedHomePage from './components/AnimatedHomePage';
 import HeatmapChart from './components/Heatmapchart';
 import AcresHistogram from './components/AcresHistogram';
+import ScatterplotChart from './components/ScatterplotChat';
+import { fetchScatterData } from './services/dataservice';
+import PricePerSqftChart from './components/PricePerSqftChart';
+import { fetchPricePerSqft } from './services/dataservice';
+
 
 import {
   fetchPriceData,
@@ -31,6 +36,10 @@ const App = () => {
   const [histogramData, setHistogramData] = useState(null);
   const [forecastData, setForecastData] = useState([]);
   const [heatmapData, setHeatmapData] = useState(null);
+  const [scatterData, setScatterData] = useState(null);
+  const [priceSqftData, setPriceSqftData] = useState(null);
+
+
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -53,6 +62,14 @@ const App = () => {
 
       const heatData = await fetchHeatmapData(selectedCity);
       setHeatmapData(heatData);
+
+      const scatterPlot = await fetchScatterData(selectedCity, selectedState);
+      setScatterData(scatterPlot.scatter_data);
+
+      const sqftData = await fetchPricePerSqft(selectedState);
+      setPriceSqftData(sqftData.chart_data);
+
+
 
       if (!stateGeoJson || stateGeoJson.state !== selectedState) {
         setGeoJsonLoading(true);
@@ -166,6 +183,22 @@ const App = () => {
           {/* Adding dummy content to test scrolling */}
           {dummyContent}
         </div>
+        <div className="card histogram-container">
+        <ScatterplotChart
+          scatterData={scatterData}
+          selectedCity={selectedCity}
+          loading={loading}
+        />
+      </div>
+      <div className="card histogram-container">
+  <PricePerSqftChart
+    chartData={priceSqftData}
+    selectedState={selectedState}
+    loading={loading}
+  />
+</div>
+
+
       </div>
     </div>
   );
