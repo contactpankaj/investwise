@@ -35,25 +35,79 @@ const ScatterplotChart = ({ scatterData, selectedCity, loading }) => {
       },
     ],
   };
-
   const options = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       tooltip: {
+        backgroundColor: '#1e293b',
+        titleColor: 'white',
+        bodyColor: 'white',
+        borderColor: '#334155',
+        borderWidth: 1,
         callbacks: {
           label: (ctx) => `Size: ${ctx.raw.x} sqft, Price: $${ctx.raw.y.toLocaleString()}`,
         },
       },
+      legend: {
+        labels: {
+          color: 'white',
+          font: {
+            size: 12,
+            family: 'inherit',
+          }
+        }
+      },
+      title: {
+        display: false
+      }
     },
     scales: {
       x: {
-        title: { display: true, text: 'House Size (sqft)' },
+        title: {
+          display: true,
+          text: 'House Size (sqft)',
+          color: 'white',
+          font: {
+            size: 12,
+            family: 'inherit'
+          }
+        },
+        ticks: {
+          color: 'white',
+          font: {
+            size: 12,
+            family: 'inherit'
+          }
+        },
+        grid: {
+          color: 'rgba(255,255,255,0.1)',
+        }
       },
       y: {
-        title: { display: true, text: 'Price (USD)' },
-      },
-    },
+        title: {
+          display: true,
+          text: 'Price (USD)',
+          color: 'white',
+          font: {
+            size: 12,
+            family: 'inherit'
+          }
+        },
+        ticks: {
+          color: 'white',
+          font: {
+            size: 12,
+            family: 'inherit'
+          }
+        },
+        grid: {
+          color: 'rgba(255,255,255,0.1)',
+        }
+      }
+    }
   };
+  
 
   return (
     <div>

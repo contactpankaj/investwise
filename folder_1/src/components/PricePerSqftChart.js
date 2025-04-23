@@ -39,12 +39,30 @@ const PricePerSqftChart = ({ chartData, selectedState, loading }) => {
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
-      legend: { display: false },
+      legend: {
+        display: false,
+        labels: {
+          color: 'white',
+          font: {
+            size: 12,
+            family: 'inherit'
+          }
+        }
+      },
       tooltip: {
+        backgroundColor: '#1e293b',
+        titleColor: 'white',
+        bodyColor: 'white',
+        borderColor: '#334155',
+        borderWidth: 1,
         callbacks: {
           label: (ctx) => `$${ctx.raw}`
         }
+      },
+      title: {
+        display: false
       }
     },
     scales: {
@@ -53,16 +71,47 @@ const PricePerSqftChart = ({ chartData, selectedState, loading }) => {
         title: {
           display: true,
           text: 'USD ($)',
+          color: 'white',
+          font: {
+            size: 12,
+            family: 'inherit'
+          }
+        },
+        ticks: {
+          color: 'white',
+          font: {
+            size: 12,
+            family: 'inherit'
+          }
+        },
+        grid: {
+          color: 'rgba(255,255,255,0.1)'
         }
       },
       x: {
         title: {
           display: true,
           text: 'City',
+          color: 'white',
+          font: {
+            size: 12,
+            family: 'inherit'
+          }
+        },
+        ticks: {
+          color: 'white',
+          font: {
+            size: 12,
+            family: 'inherit'
+          }
+        },
+        grid: {
+          color: 'rgba(255,255,255,0.1)'
         }
       }
     }
   };
+  
 
   return (
     <div>

@@ -54,29 +54,52 @@ const GraphVisualization = ({ forecastData, selectedCity, selectedState }) => {
     <div>
       <h4 className="text-sm font-bold mb-2 text-left">{title}</h4>
       <ResponsiveContainer width="100%" height={180}>
-        <LineChart data={mergedData}>
-          <CartesianGrid stroke="#334155" strokeDasharray="3 3" />
-          <XAxis dataKey="year" tick={{ fontSize: 12 }} />
-          <YAxis tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`} />
-          <Tooltip formatter={(value) => `$${value.toLocaleString()}`} />
-          <Legend />
-          <Line
-            type="monotone"
-            dataKey="historical"
-            stroke="#10b981"
-            name="Historical"
-            strokeWidth={2}
-            dot
-          />
-          <Line
-            type="monotone"
-            dataKey="forecast"
-            stroke="#3b82f6"
-            name="Forecast"
-            strokeWidth={2}
-            dot
-          />
-        </LineChart>
+      <LineChart data={mergedData}>
+      <CartesianGrid stroke="#334155" strokeDasharray="3 3" />
+
+      <XAxis 
+        dataKey="year" 
+        tick={{ fill: 'white', fontSize: 12 }} // ✅ x-axis label color
+        axisLine={{ stroke: 'white' }}         // ✅ x-axis line color
+        tickLine={{ stroke: 'white' }}         // ✅ x-axis tick line color
+      />
+
+      <YAxis 
+        tick={{ fill: 'white', fontSize: 12 }} // ✅ y-axis label color
+        axisLine={{ stroke: 'white' }}         // ✅ y-axis line color
+        tickLine={{ stroke: 'white' }}         // ✅ y-axis tick line color
+        tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`}
+      />
+
+      <Tooltip 
+        contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #334155', color: 'white' }}
+        labelStyle={{ color: 'white' }}
+        itemStyle={{ color: 'white' }}
+        formatter={(value) => `$${value.toLocaleString()}`}
+      />
+
+      <Legend 
+        wrapperStyle={{ color: 'white' }}  // ✅ legend font color
+      />
+
+      <Line
+        type="monotone"
+        dataKey="historical"
+        stroke="#10b981"
+        name="Historical"
+        strokeWidth={2}
+        dot
+      />
+      <Line
+        type="monotone"
+        dataKey="forecast"
+        stroke="#3b82f6"
+        name="Forecast"
+        strokeWidth={2}
+        dot
+      />
+    </LineChart>
+
       </ResponsiveContainer>
     </div>
   );

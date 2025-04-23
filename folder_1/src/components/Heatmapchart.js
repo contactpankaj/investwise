@@ -100,13 +100,19 @@ const HeatmapChart = ({ heatmapData, selectedCity, loading }) => {
       },
     ],
   };
-
   const options = {
     maintainAspectRatio: false,
     responsive: true,
     plugins: {
-      legend: { display: false },
+      legend: {
+        display: false
+      },
       tooltip: {
+        backgroundColor: '#1e293b',
+        titleColor: 'white',
+        bodyColor: 'white',
+        borderColor: '#334155',
+        borderWidth: 1,
         callbacks: {
           title: () => '',
           label: (ctx) => `Bed: ${ctx.raw.x}, Bath: ${ctx.raw.y}, Avg Price: $${ctx.raw.v.toLocaleString()}`,
@@ -117,20 +123,56 @@ const HeatmapChart = ({ heatmapData, selectedCity, loading }) => {
       x: {
         type: 'category',
         labels: xLabels,
-        title: { display: true, text: 'Bedrooms' },
         offset: true,
-        grid: { display: false },
+        title: {
+          display: true,
+          text: 'Bedrooms',
+          color: 'white',
+          font: {
+            size: 12,
+            family: 'inherit'
+          }
+        },
+        ticks: {
+          color: 'white',
+          font: {
+            size: 12,
+            family: 'inherit'
+          }
+        },
+        grid: {
+          display: false
+        }
       },
       y: {
         type: 'category',
         labels: yLabels,
-        title: { display: true, text: 'Bathrooms' },
         offset: true,
-        grid: { display: false },
         reverse: false,
-      },
-    },
+        title: {
+          display: true,
+          text: 'Bathrooms',
+          color: 'white',
+          font: {
+            size: 12,
+            family: 'inherit'
+          }
+        },
+        ticks: {
+          color: 'white',
+          font: {
+            size: 12,
+            family: 'inherit'
+          }
+        },
+        grid: {
+          display: false
+        }
+      }
+    }
   };
+  
+  
 
   return (
     <div>

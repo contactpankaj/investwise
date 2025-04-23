@@ -83,11 +83,27 @@ const AcresHistogram = ({ histogramData, selectedState, selectedCity, loading })
 
   const options = {
     responsive: true,
-    maintainAspectRatio: false,
+    // maintainAspectRatio: false,
     plugins: {
-      legend: { position: 'top' },
-      title: { display: false },
+      legend: {
+        position: 'top',
+        labels: {
+          color: 'white',      // ✅ Legend font color
+          font: {
+            size: 12,
+            family: 'inherit', // Match default site font
+          },
+        },
+      },
+      title: {
+        display: false,
+      },
       tooltip: {
+        backgroundColor: '#1e293b',
+        titleColor: 'white',
+        bodyColor: 'white',
+        borderColor: '#334155',
+        borderWidth: 1,
         callbacks: {
           label: (ctx) => `Properties: ${ctx.parsed.y}`,
           title: (ctx) => {
@@ -105,24 +121,52 @@ const AcresHistogram = ({ histogramData, selectedState, selectedCity, loading })
     scales: {
       y: {
         beginAtZero: true,
-        title: { display: true, text: 'Number of Properties' },
+        title: {
+          display: true,
+          text: 'Number of Properties',
+          color: 'white',
+          font: {
+            size: 40,
+            family: 'inherit',
+          },
+        },
         ticks: {
+          color: 'white',
           precision: 0,
           stepSize: yStepSize,
+          font: {
+            size: 12,
+            family: 'inherit',
+          },
+        },
+        grid: {
+          color: 'rgba(255,255,255,0.1)',
         },
       },
       x: {
-        title: { display: true, text: 'Acres' },
+        title: {
+          display: true,
+          text: 'Acres',
+          color: 'white',
+          font: {
+            size: 50,
+            family: 'inherit',
+          },
+        },
         ticks: {
+          color: 'white',
           maxRotation: 45,
           minRotation: 45,
           autoSkip: true,
           maxTicksLimit: tickSettings.maxTicksLimit || 10,
           precision: tickSettings.precision || 1,
+          font: {
+            size: 12,
+            family: 'inherit',
+          },
           callback: function (value, index) {
-            const originalLabel = this.getLabelForValue(value); // Get the actual bin label (e.g., "1.0")
-            const numericValue = parseFloat(originalLabel); 
-    
+            const originalLabel = this.getLabelForValue(value);
+            const numericValue = parseFloat(originalLabel);
             if (histogramData?.frequencies?.length > 20) {
               if (index % 2 !== 0 && index !== histogramData.frequencies.length - 1) return null;
             }
@@ -139,17 +183,21 @@ const AcresHistogram = ({ histogramData, selectedState, selectedCity, loading })
               data.labels.push(lastTick);
             }
           }
-        }
+        },
+        grid: {
+          color: 'rgba(255,255,255,0.1)',
+        },
       }
     }
   };
+  
 
   return (
     <div>
       <h4 className="text-base font-bold mb-4 text-left">
         House size Distribution in {selectedCity}, {selectedState}
       </h4>
-      <div style={{ height: '210px' }}>
+      <div style={{ height: '300px' }}>
         <Bar
           key={`histogram-${selectedState}-${selectedCity}`}
           options={options}

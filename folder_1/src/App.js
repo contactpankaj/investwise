@@ -196,31 +196,31 @@ const App = () => {
           className={activeTab === "histogram" ? "active-tab" : ""}
           onClick={() => setActiveTab("histogram")}
         >
-          Acres Histogram
+          House Size Distribution
         </button>
         <button
           className={activeTab === "forecast-heatmap" ? "active-tab" : ""}
           onClick={() => setActiveTab("forecast-heatmap")}
         >
-          Heatmap Chart
+          Features Correlation
         </button>
         <button
           className={activeTab === "scatter" ? "active-tab" : ""}
           onClick={() => setActiveTab("scatter")}
         >
-          Scatter Plot
+          Price vs Size
         </button>
         <button
           className={activeTab === "priceSqft" ? "active-tab" : ""}
           onClick={() => setActiveTab("priceSqft")}
         >
-          Price/Sqft
+          Price per Sqft
         </button>
         <button
           className={activeTab === "listings" ? "active-tab" : ""}
           onClick={() => setActiveTab("listings")}
         >
-          Listings
+          Propery Images
         </button>
       </div>
 

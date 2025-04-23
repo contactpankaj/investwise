@@ -56,7 +56,7 @@ const HeatMapView = ({
         <div className="text-sm text-slate-400 mb-2">Loading map data...</div>
       )}
 
-      <div style={{ height: '230px', opacity: loading ? 0.5 : 1 }}>
+      <div style={{ height: '360px', opacity: loading ? 0.5 : 1 }}>
         {!loading && (
           <MapComponent
             mapCenter={mapCenter}
