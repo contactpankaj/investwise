@@ -44,7 +44,10 @@ async def get_avg_price_per_sqft(state: str = Query(..., description="State name
             raise HTTPException(status_code=404, detail=f"No data found for state '{state}'.")
 
         # Calculate price per square foot
+        # df_filtered['price_per_sqft'] = df_filtered['price'] / df_filtered['house_size']
+        df_filtered = df[(df['state'] == state) & (df['city'].isin(selected_cities))].copy()
         df_filtered['price_per_sqft'] = df_filtered['price'] / df_filtered['house_size']
+
         result = df_filtered.groupby('city')['price_per_sqft'].mean().reset_index()
         result['price_per_sqft'] = result['price_per_sqft'].round(2)
 

@@ -99,7 +99,7 @@ const SearchForm = ({
           </select>
         </div>
 
-        {/* Data Type Dropdown
+
         <div>
           <label htmlFor="datatype-select" className="form-label">Heatmap Data:</label>
           <select
@@ -113,7 +113,7 @@ const SearchForm = ({
             <option value="Hospitals">Hospitals</option>
             <option value="Groceries">Groceries</option>
           </select>
-        </div> */}
+        </div>
 
         <div>
           <label htmlFor="acre-input" className="form-label">Acre:</label>

@@ -12,6 +12,7 @@ import ScatterplotChart from './components/ScatterplotChat';
 import { fetchScatterData } from './services/dataservice';
 import PricePerSqftChart from './components/PricePerSqftChart';
 import { fetchPricePerSqft } from './services/dataservice';
+import ListingsImageCarausel from './components/ListingsImageCarausel';
 
 
 import {
@@ -21,19 +22,19 @@ import {
   getCityLocation,
   fetchAcresHistogram,
   fetchHeatmapData,
-  fetchPriceForecast
-} from './services/dataservice';
+  fetchPriceForecast,
+} from "./services/dataservice";
 
 const App = () => {
   const [showHome, setShowHome] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [mapCenter, setMapCenter] = useState([29.7604, -95.3698]);
   const [mapZoom, setMapZoom] = useState(10);
   const [locationData, setLocationData] = useState([]);
   const [stateGeoJson, setStateGeoJson] = useState(null);
-  const [selectedState, setSelectedState] = useState('texas');
-  const [selectedCity, setSelectedCity] = useState('houston');
+  const [selectedState, setSelectedState] = useState("texas");
+  const [selectedCity, setSelectedCity] = useState("houston");
   const [geoJsonLoading, setGeoJsonLoading] = useState(false);
   const [histogramData, setHistogramData] = useState(null);
   const [forecastData, setForecastData] = useState([]);
@@ -42,7 +43,28 @@ const App = () => {
   const [scatterData, setScatterData] = useState([]);
   const [priceSqftData, setPriceSqftData] = useState([]);
 
+  const [activeTab, setActiveTab] = useState("visualizations");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentImages, setCurrentImages] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
+  const openModal = (images, index = 0) => {
+    setCurrentImages(images);
+    setCurrentIndex(index);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => setIsModalOpen(false);
+  const nextImage = () =>
+    setCurrentIndex((prev) => (prev + 1) % currentImages.length);
+  const prevImage = () =>
+    setCurrentIndex(
+      (prev) => (prev - 1 + currentImages.length) % currentImages.length
+    );
+    const categoryMap = {
+      'Hospitals': 'hospital', // Match backend query parameter
+      'Groceries': 'grocery'   // Match backend query parameter
+    };
   const handleSubmit = async () => {
     const categoryMap = {
       'Hospitals': 'hospital',
@@ -50,7 +72,7 @@ const App = () => {
     };
   
     setLoading(true);
-    setError('');
+    setError("");
     setHistogramData(null);
     setHeatmapData(null);
 
@@ -109,14 +131,20 @@ const App = () => {
         });
       }
     } catch (err) {
-      setError(err.message || 'An error occurred while fetching data.');
+      setError(err.message || "An error occurred while fetching data.");
       console.error(err);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleForecast = async ({ acre, bedroom, bathroom, houseSize, state }) => {
+  const handleForecast = async ({
+    acre,
+    bedroom,
+    bathroom,
+    houseSize,
+    state,
+  }) => {
     try {
       const result = await fetchPriceForecast({
         beds: parseFloat(bedroom),
@@ -124,12 +152,12 @@ const App = () => {
         acre_lot: parseFloat(acre),
         house_size: parseFloat(houseSize),
         state: state,
-        start_year: new Date().getFullYear()
+        start_year: new Date().getFullYear(),
       });
-  
-      setForecastData(result.forecast);  // assuming backend returns { forecast: [...] }
+
+      setForecastData(result.forecast); // assuming backend returns { forecast: [...] }
     } catch (error) {
-      console.error('Error fetching forecast:', error.message);
+      console.error("Error fetching forecast:", error.message);
     }
   };
 
@@ -139,10 +167,24 @@ const App = () => {
 
   // Adding some dummy content to ensure we have enough to scroll
   const dummyContent = (
-    <div style={{ height: '200px', marginTop: '20px', padding: '10px', background: '#334155', borderRadius: '8px' }}>
+    <div
+      style={{
+        height: "200px",
+        marginTop: "20px",
+        padding: "10px",
+        background: "#334155",
+        borderRadius: "8px",
+      }}
+    >
       <h3>Additional Information</h3>
-      <p>This is some dummy content to ensure we have enough height to test scrolling.</p>
-      <p>The right column should scroll if the content exceeds the viewport height.</p>
+      <p>
+        This is some dummy content to ensure we have enough height to test
+        scrolling.
+      </p>
+      <p>
+        The right column should scroll if the content exceeds the viewport
+        height.
+      </p>
     </div>
   );
 
@@ -171,46 +213,90 @@ const App = () => {
 
       {/* RIGHT COLUMN */}
       <div className="right-column">
-        <div className="card graph-container">
-          <GraphVisualization 
-            forecastData={forecastData} 
-            selectedState={selectedState} 
-            selectedCity={selectedCity}
-          />
-        </div>
-        <div className="card heatmap-container">
-          <HeatMapView
-            mapCenter={mapCenter}
-            mapZoom={mapZoom}
-            stateGeoJson={stateGeoJson}
-            locationData={locationData}
-            selectedState={selectedState}
-            selectedCity={selectedCity}
-            selectedDataType={selectedDataType}
-            setSelectedDataType={setSelectedDataType}
-            loading={loading || geoJsonLoading} 
-          />
-        </div>
-        
-        <div className="card histogram-container">
-          <AcresHistogram
-            histogramData={histogramData}
-            selectedState={selectedState}
-            selectedCity={selectedCity}
-            loading={loading}
-          />
+        <div className="tab-bar">
+          <button
+            className={activeTab === "visualizations" ? "active-tab" : ""}
+            onClick={() => setActiveTab("visualizations")}
+          >
+            Visualizations
+          </button>
+          <button
+            className={activeTab === "listings" ? "active-tab" : ""}
+            onClick={() => setActiveTab("listings")}
+          >
+            Listings
+          </button>
         </div>
 
-        <div className="card histogram-container">
-          <HeatmapChart
-            heatmapData={heatmapData}
-            selectedCity={selectedCity}
-            loading={loading}
+        {activeTab === "visualizations" && (
+          <>
+            <div className="card graph-container">
+              <GraphVisualization
+                forecastData={forecastData}
+                selectedState={selectedState}
+                selectedCity={selectedCity}
+              />
+            </div>
+            <div className="card heatmap-container">
+              <HeatMapView
+                mapCenter={mapCenter}
+                mapZoom={mapZoom}
+                stateGeoJson={stateGeoJson}
+                locationData={locationData}
+                selectedState={selectedState}
+                selectedCity={selectedCity}
+                selectedDataType={selectedDataType}
+                setSelectedDataType={setSelectedDataType}
+                loading={loading || geoJsonLoading}
+              />
+            </div>
+            <div className="card histogram-container">
+              <AcresHistogram
+                histogramData={histogramData}
+                selectedState={selectedState}
+                selectedCity={selectedCity}
+                loading={loading}
+              />
+            </div>
+            <div className="card histogram-container">
+              <HeatmapChart
+                heatmapData={heatmapData}
+                selectedCity={selectedCity}
+                loading={loading}
+              />
+              {dummyContent}
+            </div>
+            <div className="card histogram-container">
+              <ScatterplotChart
+                scatterData={scatterData}
+                selectedCity={selectedCity}
+                loading={loading}
+              />
+            </div>
+            <div className="card histogram-container">
+              <PricePerSqftChart
+                chartData={priceSqftData}
+                selectedState={selectedState}
+                loading={loading}
+              />
+            </div>
+          </>
+        )}
+
+        <div
+          className="card listings-container"
+          style={{ margin: 0, padding: 0 }}
+        >
+          <h2 style={{ padding: "20px 0px 0px 0px" }}>
+            Listings in {selectedCity}, {selectedState}
+          </h2>
+          <ListingsImageCarausel
+            rows={2}
+            cols={2}
+            folderNames={["home_1", "home_2", "home_3", "home_4"]}
           />
-          {/* Adding dummy content to test scrolling */}
-          {dummyContent}
         </div>
-        <div className="card histogram-container">
+        {/* <div className="card histogram-container">
         <ScatterplotChart
           scatterData={scatterData}
           selectedCity={selectedCity}
@@ -223,7 +309,7 @@ const App = () => {
     selectedState={selectedState}
     loading={loading}
   />
-</div>
+</div> */}
 
 
       </div>
