@@ -7,9 +7,11 @@ import HeatMapView from './components/HeatMapView';
 import AnimatedHomePage from './components/AnimatedHomePage';
 import HeatmapChart from './components/Heatmapchart';
 import AcresHistogram from './components/AcresHistogram';
+// import AnimatedHomePage from './components/AnimatedHomePage';
 
 import {
   fetchPriceData,
+  fetchPlacesCount,
   fetchStateZipBoundaries,
   getCityLocation,
   fetchAcresHistogram,
@@ -31,6 +33,12 @@ const App = () => {
   const [histogramData, setHistogramData] = useState(null);
   const [forecastData, setForecastData] = useState([]);
   const [heatmapData, setHeatmapData] = useState(null);
+  const [selectedDataType, setSelectedDataType] = useState('Price');
+  
+  const categoryMap = {
+    'Hospitals': 'hospital', // Match backend query parameter
+    'Groceries': 'grocery'   // Match backend query parameter
+  };
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -38,22 +46,37 @@ const App = () => {
     setHistogramData(null);
     setHeatmapData(null);
 
+    setLocationData([]);
+    
     try {
+      // Get city coordinates and update map center
       const cityCoordinates = await getCityLocation(selectedCity, selectedState);
       if (cityCoordinates) {
         setMapCenter(cityCoordinates);
         setMapZoom(11);
       }
-
-      const priceData = await fetchPriceData(selectedState, selectedCity);
-      setLocationData(priceData);
-
+      
+      // Fetch data based on selected data type
+      let heatmapData = [];
+      
+      if (selectedDataType === 'Price') {
+        heatmapData = await fetchPriceData(selectedState, selectedCity);
+      } else if (selectedDataType === 'Hospitals' || selectedDataType === 'Groceries') {
+        const category = categoryMap[selectedDataType]; // Get backend category name
+        heatmapData = await fetchPlacesCount(selectedState, selectedCity, category);
+      }
+      
+      setLocationData(heatmapData);
+      
+      // Always fetch histogram data
       const histData = await fetchAcresHistogram(selectedState, selectedCity);
       setHistogramData(histData);
 
       const heatData = await fetchHeatmapData(selectedCity);
       setHeatmapData(heatData);
 
+      
+      // Load or update GeoJSON data for the state
       if (!stateGeoJson || stateGeoJson.state !== selectedState) {
         setGeoJsonLoading(true);
         const geoJsonData = await fetchStateZipBoundaries(selectedState);
@@ -117,6 +140,8 @@ const App = () => {
             setSelectedState={setSelectedState}
             selectedCity={selectedCity}
             setSelectedCity={setSelectedCity}
+            selectedDataType={selectedDataType}
+            setSelectedDataType={setSelectedDataType}
             handleSubmit={handleSubmit}
             handleForecast={handleForecast}
             loading={loading}
@@ -131,9 +156,9 @@ const App = () => {
       {/* RIGHT COLUMN */}
       <div className="right-column">
         <div className="card graph-container">
-          <GraphVisualization
-            forecastData={forecastData}
-            selectedState={selectedState}
+          <GraphVisualization 
+            forecastData={forecastData} 
+            selectedState={selectedState} 
             selectedCity={selectedCity}
           />
         </div>
@@ -145,6 +170,9 @@ const App = () => {
             locationData={locationData}
             selectedState={selectedState}
             selectedCity={selectedCity}
+            selectedDataType={selectedDataType}
+            setSelectedDataType={setSelectedDataType}
+            loading={loading || geoJsonLoading} 
           />
         </div>
         
@@ -167,6 +195,13 @@ const App = () => {
           {dummyContent}
         </div>
       </div>
+      
+      {/* Error message display */}
+      {error && (
+        <div className="error-message">
+          <p>{error}</p>
+        </div>
+      )}
     </div>
   );
 };

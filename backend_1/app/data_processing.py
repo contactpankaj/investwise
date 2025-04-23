@@ -10,6 +10,7 @@ def process_csv_data():
     """
     try:
         file_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data', 'house_price.csv')
+        print(file_path)
         df = pd.read_csv(file_path)
         
         # Clean data - convert to lowercase and handle missing values

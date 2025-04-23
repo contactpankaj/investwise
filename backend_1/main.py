@@ -5,8 +5,11 @@ import uvicorn
 from app.routes import router
 from app.data_processing import process_csv_data
 
-# Initialize FastAPI app
 app = FastAPI(title="House Price API")
+origins = [
+                "http://localhost:3000", # Your React app origin
+                # Add any other origins if needed
+            ]
 
 origins = [
     "https://investwise0001.netlify.app",  # ✅ your Netlify frontend

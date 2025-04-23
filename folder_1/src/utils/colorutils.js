@@ -1,26 +1,46 @@
 // Color utils for price visualization
 
 // Function to map normalized price to color with improved gradient
+// export const getColorBasedOnPrice = (normalizedPrice) => {
+//     // Using an improved gradient for better visualization
+//     if (normalizedPrice === undefined || normalizedPrice === null) {
+//       return '#CCCCCC'; // Gray for missing data
+//     } else if (normalizedPrice < 0.7) {
+//       return '#00CC00'; // Dark green for very low prices
+//     } else if (normalizedPrice < 0.8) {
+//       return '#66FF66'; // Medium green
+//     } else if (normalizedPrice < 0.9) {
+//       return '#BBFF88'; // Light green-yellow
+//     } else if (normalizedPrice < 1.0) {
+//       return '#FFFF00'; // Yellow for average
+//     } else if (normalizedPrice < 1.1) {
+//       return '#FFBB33'; // Light orange
+//     } else if (normalizedPrice < 1.2) {
+//       return '#FF6600'; // Dark orange
+//     } else {
+//       return '#FF0000'; // Red for very high prices
+//     }
+//   };
+
 export const getColorBasedOnPrice = (normalizedPrice) => {
-    // Using an improved gradient for better visualization
-    if (normalizedPrice === undefined || normalizedPrice === null) {
-      return '#CCCCCC'; // Gray for missing data
-    } else if (normalizedPrice < 0.7) {
-      return '#00CC00'; // Dark green for very low prices
-    } else if (normalizedPrice < 0.8) {
-      return '#66FF66'; // Medium green
-    } else if (normalizedPrice < 0.9) {
-      return '#BBFF88'; // Light green-yellow
-    } else if (normalizedPrice < 1.0) {
-      return '#FFFF00'; // Yellow for average
-    } else if (normalizedPrice < 1.1) {
-      return '#FFBB33'; // Light orange
-    } else if (normalizedPrice < 1.2) {
-      return '#FF6600'; // Dark orange
-    } else {
-      return '#FF0000'; // Red for very high prices
-    }
-  };
+  if (normalizedPrice === undefined || normalizedPrice === null) {
+    return '#CCCCCC'; // Gray for missing data
+  }
+
+  const clamped = Math.min(1, Math.max(0, normalizedPrice));
+  let hue;
+  if (clamped <= 0.33) {
+    hue = 120 - (clamped / 0.33) * 60;
+  } else if (clamped <= 0.66) {
+
+    hue = 60 - ((clamped - 0.33) / 0.33) * 30;
+  } else {
+   
+    hue = 30 - ((clamped - 0.66) / 0.34) * 30;
+  }
+
+  return `hsl(${hue}, 100%, 50%)`;
+};
   
   // Get price category based on normalized price
 export const getPriceCategory = (normalizedPrice) => {

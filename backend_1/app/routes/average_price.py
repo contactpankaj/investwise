@@ -4,6 +4,8 @@ from ..data_processing import get_price_data
 from ..utils import normalize_prices
 from ..ML_model import test_property_price_prediction
 
+
+
 router = APIRouter()
 
 @router.get("/api/average-prices")
@@ -24,6 +26,9 @@ async def get_average_prices(
     return {
         "result": normalized_data
         }
+
+
+
 
 @router.get("/")
 async def root():
@@ -57,3 +62,5 @@ async def predict_price(req: PredictionRequest):
         raise HTTPException(status_code=500, detail=result["error"])
     
     return {"forecast": result}
+
+

@@ -117,13 +117,12 @@
 
 
 
-
-
 from fastapi import APIRouter, HTTPException, Query
 import requests
 import pandas as pd
 import os
 import time
+#import dotenv
 
 router = APIRouter()
 
