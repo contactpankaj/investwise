@@ -12,8 +12,10 @@ import ScatterplotChart from './components/ScatterplotChat';
 import { fetchScatterData } from './services/dataservice';
 import PricePerSqftChart from './components/PricePerSqftChart';
 import { fetchPricePerSqft } from './services/dataservice';
-import ListingsImageCarausel from './components/ListingsImageCarausel';
+import ListingsImageCarausel from "./components/ListingsImageCarauselWithPopup";
 
+// import React, { useState } from "react";
+// import "./App.css";
 
 import {
   fetchPriceData,
@@ -44,27 +46,7 @@ const App = () => {
   const [priceSqftData, setPriceSqftData] = useState([]);
 
   const [activeTab, setActiveTab] = useState("visualizations");
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [currentImages, setCurrentImages] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
 
-  const openModal = (images, index = 0) => {
-    setCurrentImages(images);
-    setCurrentIndex(index);
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => setIsModalOpen(false);
-  const nextImage = () =>
-    setCurrentIndex((prev) => (prev + 1) % currentImages.length);
-  const prevImage = () =>
-    setCurrentIndex(
-      (prev) => (prev - 1 + currentImages.length) % currentImages.length
-    );
-    const categoryMap = {
-      'Hospitals': 'hospital', // Match backend query parameter
-      'Groceries': 'grocery'   // Match backend query parameter
-    };
   const handleSubmit = async () => {
     const categoryMap = {
       'Hospitals': 'hospital',
@@ -283,43 +265,22 @@ const App = () => {
           </>
         )}
 
-        <div
-          className="card listings-container"
-          style={{ margin: 0, padding: 0 }}
-        >
-          <h2 style={{ padding: "20px 0px 0px 0px" }}>
-            Listings in {selectedCity}, {selectedState}
-          </h2>
-          <ListingsImageCarausel
-            rows={2}
-            cols={2}
-            folderNames={["home_1", "home_2", "home_3", "home_4"]}
-          />
-        </div>
-        {/* <div className="card histogram-container">
-        <ScatterplotChart
-          scatterData={scatterData}
-          selectedCity={selectedCity}
-          loading={loading}
-        />
+        {activeTab === "listings" && (
+          <div
+            className="card listings-container"
+            style={{ margin: 0, padding: 0 }}
+          >
+            <h2 style={{ padding: "20px 0px 0px 0px" }}>
+              Listings in {selectedCity}, {selectedState}
+            </h2>
+            <ListingsImageCarausel
+              rows={2}
+              cols={2}
+              folderNames={["home_1", "home_2", "home_3", "home_4"]}
+            />
+          </div>
+        )}
       </div>
-      <div className="card histogram-container">
-  <PricePerSqftChart
-    chartData={priceSqftData}
-    selectedState={selectedState}
-    loading={loading}
-  />
-</div> */}
-
-
-      </div>
-      
-      {/* Error message display */}
-      {error && (
-        <div className="error-message">
-          <p>{error}</p>
-        </div>
-      )}
     </div>
   );
 };

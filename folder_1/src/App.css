@@ -212,3 +212,79 @@ html, body, #root {
 .carousel-controls button:hover {
   background-color: rgba(0, 0, 0, 0.8);
 }
+
+/* Modal Carousel Styles Popups */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-image {
+  max-height: 80vh;
+  max-width: 90vw;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.modal-close-button {
+  position: fixed; /* fixed to viewport , change to 'absolute' if want inside the image */
+  top: 20px;
+  right: 30px;
+  font-size: 24px;
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  z-index: 1100; /* higher than overlay or arrows */
+}
+
+.modal-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  background-color: rgba(0, 0, 0, 0.5); /* semi-transparent black */
+  border: none;
+  border-radius: 50%;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.modal-arrow.left {
+  left: 20px;
+}
+
+.modal-arrow.right {
+  right: 20px;
+}
+
+.modal-arrow:hover {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.carousel-image-counter-overlay {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+}
