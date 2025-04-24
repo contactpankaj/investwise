@@ -47,7 +47,7 @@ const App = () => {
   const [hasSubmitted, setHasSubmitted] = useState(false);
 
   const [activeTab, setActiveTab] = useState("heatmap"); 
-
+  const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
   const handleSubmit = async () => {
     setHasSubmitted(true);
     const categoryMap = {
@@ -279,7 +279,7 @@ const App = () => {
         {activeTab === "listings" && (
           <div className="listings-container" style={{ margin: 0, padding: 0 }}>
             <h2 style={{ padding: "20px 0px 0px 0px" }}>
-              Listings in {selectedCity}, {selectedState}
+              Listings in {capitalize(selectedCity)}, {capitalize(selectedState)}
             </h2>
             <ListingsImageCarausel
               rows={2}
@@ -301,3 +301,6 @@ const App = () => {
 };
 
 export default App;
+
+
+

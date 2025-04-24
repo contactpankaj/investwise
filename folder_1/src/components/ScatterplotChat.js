@@ -15,7 +15,7 @@ ChartJS.register(
   Tooltip,
   Title
 );
-
+const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
 const ScatterplotChart = ({ scatterData, selectedCity, loading }) => {
   if (loading) {
     return <div>Loading scatterplot data...</div>;
@@ -112,7 +112,7 @@ const ScatterplotChart = ({ scatterData, selectedCity, loading }) => {
   return (
     <div>
       <h4 className="text-base font-bold mb-4 text-left">
-        House Size vs Price in {selectedCity}
+        House Size vs Price in {capitalize(selectedCity)}
       </h4>
       <div style={{ height: '300px' }}>
         <Chart type="scatter" data={chartData} options={options} />

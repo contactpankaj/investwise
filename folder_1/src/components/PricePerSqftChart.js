@@ -19,7 +19,7 @@ ChartJS.register(
   Tooltip,
   Legend
 );
-
+const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
 const PricePerSqftChart = ({ chartData, selectedState, loading }) => {
   if (loading) return <div>Loading price per square foot data...</div>;
   if (!chartData || !chartData.length) return <div>No data available for {selectedState}</div>;
@@ -116,7 +116,7 @@ const PricePerSqftChart = ({ chartData, selectedState, loading }) => {
   return (
     <div>
       <h4 className="text-base font-bold mb-4 text-left">
-        Avg Price per Sqft in {selectedState}
+        Avg Price per Sqft in {capitalize(selectedState)}
       </h4>
       <div style={{ height: '320px' }}>
         <Bar data={data} options={options} />

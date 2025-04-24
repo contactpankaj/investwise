@@ -10,10 +10,13 @@ const GraphVisualization = ({ forecastData, selectedCity, selectedState }) => {
     return <div className="text-gray-500">Submit the form to see forecast data here.</div>;
   }
 
+  const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
+
   const title =
     selectedCity && selectedState
-      ? `Price trend and prediction for ${selectedCity}, ${selectedState}`
+      ? `Price Trend and Prediction for ${capitalize(selectedCity)}, ${capitalize(selectedState)}`
       : 'Price Forecast';
+  
 
   // Split historical and forecast data
   const historical = forecastData

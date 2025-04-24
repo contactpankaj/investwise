@@ -18,13 +18,14 @@ ChartJS.register(
   Tooltip,
   Legend
 );
+const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
 
 const AcresHistogram = ({ histogramData, selectedState, selectedCity, loading }) => {
   if (loading) {
     return (
       <div>
         <h4 className="text-base font-bold mb-4 text-left">
-          House size Distribution in {selectedCity}, {selectedState}
+          House size Distribution in {capitalize(selectedCity)}, {capitalize(selectedState)}
         </h4>
         <div className="text-gray-500">Loading histogram data...</div>
       </div>
@@ -35,7 +36,7 @@ const AcresHistogram = ({ histogramData, selectedState, selectedCity, loading })
     return (
       <div>
         <h4 className="text-base font-bold mb-4 text-left">
-          House size Distribution in {selectedCity}, {selectedState}
+          House size Distribution in {capitalize(selectedCity)}, {capitalize(selectedState)}
         </h4>
         <div className="text-gray-500">
           Submit a search to view the acres distribution.
@@ -60,11 +61,12 @@ const AcresHistogram = ({ histogramData, selectedState, selectedCity, loading })
       {
         label: 'Number of Properties',
         data: histogramData?.frequencies || [],
-        backgroundColor: 'rgba(54, 162, 235, 0.5)',
-        borderColor: 'rgba(54, 162, 235, 1)',
+        backgroundColor: 'rgba(216, 191, 255, 0.6)', // ✅ light orange-yellow
+        borderColor: 'rgba(153, 102, 255, 1)',        // ✅ medium orange
         borderWidth: 1,
       },
     ],
+    
   };
 
   const maxFrequency = Math.max(...(histogramData?.frequencies || [0]));
@@ -195,9 +197,9 @@ const AcresHistogram = ({ histogramData, selectedState, selectedCity, loading })
   return (
     <div>
       <h4 className="text-base font-bold mb-4 text-left">
-        House size Distribution in {selectedCity}, {selectedState}
+        House size Distribution in {capitalize(selectedCity)}, {capitalize(selectedState)}
       </h4>
-      <div style={{ height: '300px' }}>
+      <div style={{ height: '400px' }}>
         <Bar
           key={`histogram-${selectedState}-${selectedCity}`}
           options={options}

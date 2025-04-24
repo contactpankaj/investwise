@@ -22,7 +22,7 @@ ChartJS.register(
   MatrixController,
   MatrixElement
 );
-
+const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
 const HeatmapChart = ({ heatmapData, selectedCity, loading }) => {
   if (loading) {
     return (
@@ -177,12 +177,13 @@ const HeatmapChart = ({ heatmapData, selectedCity, loading }) => {
   return (
     <div>
       <h4 className="text-base font-bold mb-4 text-left">
-        Average Property Price in {selectedCity}
+        Average Property Price in {capitalize(selectedCity)}
       </h4>
-      
-      <div style={{ display: 'flex', alignItems: 'stretch' }}>
+  
+      {/* Chart and Legend container */}
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
         {/* Chart container */}
-        <div style={{ height: '260px', width: '94%' }}>
+        <div style={{ height: '260px', width: '100%' }}>
           <Chart
             key={`heatmap-${selectedCity}`}
             type="matrix"
@@ -190,45 +191,45 @@ const HeatmapChart = ({ heatmapData, selectedCity, loading }) => {
             options={options}
           />
         </div>
-       {/* Full-height color scale on the right */}
-<div style={{ 
-  width: '6%', 
-  display: 'flex', 
-  flexDirection: 'column',
-  alignItems: 'center',
-  marginLeft: '16px'
-}}>
-  <div style={{ 
-    height: '244.4px',  // Match exactly to chart height
-    display: 'flex',
-    alignItems: 'stretch'
-  }}>
-    {/* Color bar */}
-    <div style={{ 
-      width: '10px', 
-      background: 'linear-gradient(to bottom, #ff3300, #ffaa00, #ffffcc)',
-      borderRadius: '2px',
-      marginRight: '6px'
-    }}></div>
-
-    {/* Right-side labels */}
-    <div style={{ 
-      display: 'flex', 
-      flexDirection: 'column',
-      justifyContent: 'space-between',
-      fontSize: '10px',
-      marginLeft: '0px'
-    }}>
-      <div style={{ whiteSpace: 'nowrap' }}>$2 Mn</div>
-      <div>$0</div>
-    </div>
-  </div>
-</div>
-
-        
+  
+        {/* Horizontal legend */}
+        <div
+          style={{
+            marginTop: '12px',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center'
+          }}
+        >
+          {/* Gradient bar */}
+          <div
+            style={{
+              width: '80%',
+              height: '12px',
+              background: 'linear-gradient(to right, #ffffcc, #ffaa00, #ff3300)',
+              borderRadius: '4px',
+              position: 'relative'
+            }}
+          ></div>
+  
+          {/* Min and max labels */}
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              width: '80%',
+              fontSize: '10px',
+              marginTop: '4px',
+              color: 'white'
+            }}
+          >
+            <span>${Math.round(minValue / 1000).toLocaleString()}K</span>
+            <span>${Math.round(maxValue / 1000).toLocaleString()}K</span>
+          </div>
+        </div>
       </div>
     </div>
   );
-};
+  };
 
 export default HeatmapChart;
