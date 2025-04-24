@@ -1,13 +1,19 @@
 from fastapi import APIRouter, HTTPException, Query
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
-from ..data_processing import get_price_data
-from ..utils import normalize_prices
-from ..ML_model import test_property_price_prediction
 import pandas as pd
 import numpy as np
 import os
+import requests
+import time
+from fastapi.responses import JSONResponse
+from ..data_processing import get_price_data
+from ..utils import normalize_prices
+from ..ML_model import test_property_price_prediction
 
 router = APIRouter()
+
+GOOGLE_API_KEY = "AIzaSyBGCIVIN2UpI6M44P3HxQNfZ1p82XeOtGM"
 
 @router.get("/api/average-prices")
 async def get_average_prices(
@@ -185,3 +191,188 @@ async def get_acres_histogram(
             status_code=500, 
             detail=f"Error processing histogram data: {str(e)}"
         )
+    
+
+
+    # ---------- Acres Histogram ----------
+
+@router.get("/api/acres-histogram")
+async def get_acres_histogram(state: str, city: str):
+    file_path = os.path.join("data", "house_price.csv")
+    if not os.path.exists(file_path):
+        raise HTTPException(status_code=404, detail="CSV file not found")
+
+    df = pd.read_csv(file_path)
+    df['state'] = df['state'].str.lower().str.strip()
+    df['city'] = df['city'].str.lower().str.strip()
+    df['acre_lot'] = pd.to_numeric(df['acre_lot'], errors='coerce')
+
+    filtered = df[(df['state'] == state.lower()) & (df['city'] == city.lower())]
+    acres = filtered['house_size'].dropna()
+    acres = acres[(acres > 0) & (acres <= 5000)]
+
+    if acres.empty:
+        raise HTTPException(status_code=404, detail="No valid acre data")
+
+    hist, bin_edges = np.histogram(acres, bins='auto')
+    bin_labels = [f"{bin_edges[i]:.3f}-{bin_edges[i+1]:.3f}" for i in range(len(bin_edges)-1)]
+
+    return {
+        "labels": bin_labels,
+        "frequencies": hist.tolist(),
+        "metadata": {
+            "min_acres": float(acres.min()),
+            "max_acres": float(acres.max()),
+            "avg_acres": float(acres.mean()),
+            "bin_edges": bin_edges.tolist()
+        }
+    }
+
+# ---------- Heatmap Chart ----------
+
+@router.get("/api/heatmap")
+async def get_heatmap(
+    city: str = Query(..., description="City name")
+):
+    try:
+        file_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'data', 'house_price.csv')
+
+        if not os.path.exists(file_path):
+            raise HTTPException(status_code=404, detail=f"CSV file not found at {file_path}")
+
+        df = pd.read_csv(file_path)
+        df = df.dropna(subset=['bed', 'bath', 'city', 'price'])
+
+        # Convert price to numeric if it's a string with dollar sign/comma
+        df['price'] = df['price'].replace('[\$,]', '', regex=True).astype(float)
+        df['bed'] = df['bed'].astype(int)
+        df['bath'] = df['bath'].astype(int)
+        df['city'] = df['city'].str.lower().str.strip()
+
+        # Filter to only include up to 6 beds and 6 baths
+        df = df[(df['bed'] <= 6) & (df['bath'] <= 6)]
+        
+        city = city.lower().strip()
+        city_df = df[df['city'] == city]
+
+        if city_df.empty:
+            raise HTTPException(status_code=404, detail=f"No data found for city '{city}'")
+
+        pivot_table = city_df.pivot_table(index='bath', columns='bed', values='price', aggfunc='mean', fill_value=0)
+        sorted_beds = sorted(pivot_table.columns.tolist())
+        sorted_baths = sorted(pivot_table.index.tolist())
+        pivot_table = pivot_table.reindex(index=sorted_baths, columns=sorted_beds, fill_value=0)
+        pivot_json = pivot_table.reset_index().to_dict(orient='records')
+
+        # Calculate min and max for the color scale
+        min_price = pivot_table.values.min()
+        max_price = pivot_table.values.max()
+
+        return JSONResponse(content={
+            "city": city,
+            "matrix": pivot_json,
+            "beds": sorted_beds,
+            "baths": sorted_baths,
+            "metadata": {
+                "x_label": "Bedrooms",
+                "y_label": "Bathrooms",
+                "metric": "average_price",
+                "min_price": min_price,
+                "max_price": max_price
+            }
+        })
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error processing heatmap: {str(e)}")
+
+# ---------- Price per Sqft ----------
+
+@router.get("/api/price-per-sqft")
+async def get_price_per_sqft(state: str):
+    STATE_CITIES = {
+        "arizona": ["flagstaff", "mesa", "tucson", "tempe", "scottsdale"],
+        "california": ["los angeles", "sacramento", "san diego", "san francisco", "san jose"],
+        "texas": ["austin", "dallas", "houston", "fort worth", "san antonio"],
+        "new york": ["brooklyn", "buffalo", "manhattan", "new york city", "rochester"],
+        "washington": ["bellevue", "olympia", "seattle", "spokane", "tacoma"]
+    }
+
+    file_path = os.path.join("data", "house_price.csv")
+    df = pd.read_csv(file_path)
+    df = df.dropna(subset=['price', 'house_size'])
+
+    df['price'] = df['price'].replace('[\$,]', '', regex=True).astype(float)
+    df['house_size'] = pd.to_numeric(df['house_size'], errors='coerce')
+    df['city'] = df['city'].str.lower()
+    df['state'] = df['state'].str.lower()
+
+    cities = STATE_CITIES.get(state.lower())
+    df_filtered = df[(df['state'] == state.lower()) & (df['city'].isin(cities))]
+
+    df_filtered['price_per_sqft'] = df_filtered['price'] / df_filtered['house_size']
+    result = df_filtered.groupby('city')['price_per_sqft'].mean().reset_index()
+    result['price_per_sqft'] = result['price_per_sqft'].round(2)
+
+    return {"chart_data": result.to_dict(orient='records')}
+
+# ---------- Scatterplot ----------
+
+@router.get("/api/scatterplot")
+async def get_scatterplot(state: str, city: str):
+    file_path = os.path.join("data", "house_price.csv")
+    df = pd.read_csv(file_path).dropna(subset=['price', 'house_size', 'state', 'city'])
+
+    df['price'] = df['price'].replace('[\$,]', '', regex=True).astype(float)
+    df['house_size'] = pd.to_numeric(df['house_size'], errors='coerce')
+    df = df[(df['state'].str.lower() == state.lower()) & (df['city'].str.lower() == city.lower())]
+    df = df[df['house_size'] <= 10000]
+
+    return {
+        "scatter_data": df[['house_size', 'price']].to_dict(orient='records')
+    }
+
+# ---------- Places Count ----------
+
+def get_zip_codes_for_city_state(state: str, city: str):
+    file_path = os.path.join("data", "house_price.csv")
+    df = pd.read_csv(file_path)
+    df['city'] = df['city'].str.lower()
+    df['state'] = df['state'].str.lower()
+    matched = df[(df['state'] == state.lower()) & (df['city'] == city.lower())]
+    return matched['zip_code'].astype(str).tolist()
+
+def get_lat_lng(zip_code: str):
+    url = f"https://maps.googleapis.com/maps/api/geocode/json?address={zip_code}&key={GOOGLE_API_KEY}"
+    res = requests.get(url)
+    if res.ok and res.json().get("status") == "OK":
+        loc = res.json()["results"][0]["geometry"]["location"]
+        return loc["lat"], loc["lng"]
+    return None, None
+
+def get_places(lat, lng, category="hospital", radius=3000):
+    url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json"
+    params = {"location": f"{lat},{lng}", "radius": radius, "type": category, "key": GOOGLE_API_KEY}
+    res = requests.get(url, params=params)
+    return len(res.json().get("results", []))
+
+@router.get("/api/places-count")
+async def get_places_count(state: str, city: str, category: str):
+    zip_codes = get_zip_codes_for_city_state(state, city)
+    results = []
+    max_count = 0
+
+    for zip_code in zip_codes[:30]:
+        lat, lng = get_lat_lng(zip_code)
+        count = get_places(lat, lng, category) if lat and lng else 0
+        max_count = max(max_count, count)
+        results.append({"zip": zip_code, "count": count})
+
+    return {
+        "result": [
+            {
+                "zip": r["zip"],
+                "count": r["count"],
+                "normalized_count": 1 - r["count"] / max_count if max_count else 0
+            } for r in results
+        ]
+    }
