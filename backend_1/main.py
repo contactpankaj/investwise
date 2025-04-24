@@ -11,14 +11,11 @@ from app.data_processing import process_csv_data
 
 app = FastAPI(title="House Price API")
 origins = [
-                "http://localhost:3000", # Your React app origin
-                # Add any other origins if needed
-            ]
-
-origins = [
-    "https://investwise0001.netlify.app",  # ✅ your Netlify frontend
-    "http://localhost:3000",               # for local dev
+    "https://investwise0001.netlify.app",  # ✅ Netlify frontend
+    "http://localhost:3000",               # ✅ Local frontend
+    "https://investwise-86oz.onrender.com" # ✅ Render backend itself if needed
 ]
+
 
 # Enable CORS
 app.add_middleware(
