@@ -19,9 +19,7 @@ __pycache__/
 # Logs
 *.log
 
-# Env files
-.env
-.env.*
+
 
 # macOS & Windows junk
 .DS_Store
