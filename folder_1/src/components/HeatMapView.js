@@ -105,7 +105,7 @@ const HeatMapView = ({
           width: '80%',
           height: '12px',
           background:
-            'linear-gradient(to right, #e6ffe6, #bfff00, #ffff66, #ff9900, #ff0000)',
+            'linear-gradient(to right, hsl(120, 100%, 50%), hsl(60, 100%, 50%), hsl(30, 100%, 50%), hsl(0, 100%, 50%))',
           borderRadius: '4px',
           position: 'relative'
         }}
@@ -148,7 +148,7 @@ const HeatMapView = ({
           width: '80%',
           height: '12px',
           background:
-            'linear-gradient(to right, #e6ffe6, #ffff66, #ffcc00, #ff6600, #ff0000)',
+            'linear-gradient(to left, hsl(120, 100%, 50%), hsl(60, 100%, 50%), hsl(30, 100%, 50%), hsl(0, 100%, 50%))',
           borderRadius: '4px',
           position: 'relative'
         }}

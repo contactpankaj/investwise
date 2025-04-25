@@ -54,7 +54,7 @@ const Chatbot = () => {
       model: "llama-3.3-70b-versatile",
       messages: apiMessages,
       temperature: 1,
-      max_completion_tokens: 30,
+      max_completion_tokens: 100,
       top_p: 1,
       stream: true,
       stop: null,

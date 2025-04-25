@@ -115,7 +115,7 @@ const HeatmapChart = ({ heatmapData, selectedCity, loading }) => {
         borderWidth: 1,
         callbacks: {
           title: () => '',
-          label: (ctx) => `Bed: ${ctx.raw.x}, Bath: ${ctx.raw.y}, Avg Price: $${ctx.raw.v.toLocaleString()}`,
+          label: (ctx) => `Bed: ${ctx.raw.x}, Bath: ${ctx.raw.y}, Avg Price: $${Math.round(ctx.raw.v).toLocaleString()}`,
         },
       },
     },

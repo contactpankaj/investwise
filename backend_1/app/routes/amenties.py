@@ -202,7 +202,7 @@ async def get_places_count(
         results = []
         max_count = 0
 
-        for zip_code in zip_codes[:30]:  # limit to 15 for quota safety
+        for zip_code in zip_codes[:]:  # limit to 15 for quota safety
             lat, lng = get_lat_lng_from_zip(zip_code)
             if lat is None or lng is None:
                 count = 0

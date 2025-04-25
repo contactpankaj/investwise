@@ -112,11 +112,14 @@ const AcresHistogram = ({ histogramData, selectedState, selectedCity, loading })
             if (histogramData?.metadata?.bin_edges) {
               const i = ctx[0].dataIndex;
               const edges = histogramData.metadata.bin_edges;
-              const precision = (edges[i + 1] - edges[i]) < 1 ? 2 : 1;
-              return `${edges[i].toFixed(precision)} - ${edges[i + 1].toFixed(precision)} acres`;
+              const precision = (edges[i + 1] - edges[i]) < 1 ? 2 : 2;
+              const start = (edges[i] / 1000).toFixed(precision);
+              const end = (edges[i + 1] / 1000).toFixed(precision);
+              return `${start} - ${end} acres`;
             }
             return ctx[0].label;
           }
+          
         }
       }
     },

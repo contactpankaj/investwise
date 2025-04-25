@@ -332,3 +332,16 @@ html, body, #root {
 .modal-arrow:hover {
   background-color: rgba(0, 0, 0, 0.7);
 }
+
+.ribbon-tabs button {
+  background: transparent;
+  border: none;
+  font-weight: 500;
+  color: #ffffff;
+  padding: 4px 10px;     /* ✅ smaller vertical space */
+  font-size: 15px;       /* ✅ smaller text */
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
