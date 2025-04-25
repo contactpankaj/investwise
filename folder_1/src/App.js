@@ -284,8 +284,10 @@ const App = () => {
             <ListingsImageCarausel
               rows={2}
               cols={2}
+              basePath={selectedState.toLowerCase()} // assuming lowercase folder names
               folderNames={["home_1", "home_2", "home_3", "home_4"]}
             />
+
           </div>
         )}
       </div>

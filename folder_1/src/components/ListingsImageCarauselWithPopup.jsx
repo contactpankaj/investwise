@@ -101,45 +101,45 @@ const ModalCarousel = ({ images, startIndex, onClose }) => {
   };
   
 
-const ListingsImageCarausel = ({ folderNames = [], cols = 2 }) => {
-  const [modalOpen, setModalOpen] = useState(false);
-  const [modalImages, setModalImages] = useState([]);
-  const [modalIndex, setModalIndex] = useState(0);
-
-  const openModal = (images, index) => {
-    setModalImages(images);
-    setModalIndex(index);
-    setModalOpen(true);
-  };
-
-  return (
-    <>
-      <div
-        className="grid-container"
-        style={{
-          display: "grid",
-          gridTemplateColumns: `repeat(${cols}, 1fr)`,
-          gap: "16px",
-          padding: "20px",
-        }}
-      >
-        {folderNames.map((folder, index) => (
-          <ImageCarouselCell
-            key={index}
-            folderName={folder}
-            onClickImage={openModal}
+  const ListingsImageCarausel = ({ folderNames = [], cols = 2, basePath = "" }) => {
+    const [modalOpen, setModalOpen] = useState(false);
+    const [modalImages, setModalImages] = useState([]);
+    const [modalIndex, setModalIndex] = useState(0);
+  
+    const openModal = (images, index) => {
+      setModalImages(images);
+      setModalIndex(index);
+      setModalOpen(true);
+    };
+  
+    return (
+      <>
+        <div
+          className="grid-container"
+          style={{
+            display: "grid",
+            gridTemplateColumns: `repeat(${cols}, 1fr)`,
+            gap: "16px",
+            padding: "20px",
+          }}
+        >
+          {folderNames.map((folder, index) => (
+            <ImageCarouselCell
+              key={index}
+              folderName={`${basePath}/${folder}`} // updated to include basePath
+              onClickImage={openModal}
+            />
+          ))}
+        </div>
+        {modalOpen && (
+          <ModalCarousel
+            images={modalImages}
+            startIndex={modalIndex}
+            onClose={() => setModalOpen(false)}
           />
-        ))}
-      </div>
-      {modalOpen && (
-        <ModalCarousel
-          images={modalImages}
-          startIndex={modalIndex}
-          onClose={() => setModalOpen(false)}
-        />
-      )}
-    </>
-  );
-};
+        )}
+      </>
+    );
+  };
 
 export default ListingsImageCarausel;
