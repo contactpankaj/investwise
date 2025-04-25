@@ -38,6 +38,9 @@ $ npm install groq-sdk
 
 $ npm install chartjs-chart-matrix chartjs-adapter-date-fns
 
+**NOTE: Below step is not necessary but helps in centring of map.**
+create a .env file and add REACT_APP_GOOGLE_MAPS_API_KEY=YOUR_Key 
+
 $ npm start
 
 Investwise webapp will open!!!
