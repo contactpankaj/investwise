@@ -1,10 +1,10 @@
-# 🛠️ Investwise Setup Guide
+# Investwise Setup Guide
 
 InvestWise repository contains a **Python FastAPI backend** and a **React frontend**. Follow the steps below to set up the project locally.
 
 ---
 
-## 📦 Prerequisites
+## Prerequisites
 
 Make sure you have the following installed:
 
@@ -13,24 +13,29 @@ Make sure you have the following installed:
 
 ---
 
-## 🔧 Backend Setup (FastAPI)
+## Backend Setup (FastAPI)
 
 $ cd backend_1
-$ python3 -m venv venv
-$ source venv/bin/activate
-$ pip install -r requirements.txt
-$ python2 main.py
 
-# Return to the project root
+$ python3 -m venv venv
+
+$ source venv/bin/activate
+
+$ pip install -r requirements.txt
+
+$ python3 main.py
+
+### Return to the project root
 cd ..
 
 
-# Frontend Setup
+## Frontend Setup(React)
 $ cd folder_1
+
 $ npm install
 
-# Install additional required packages
 $ npm install groq-sdk
+
 $ npm install chartjs-chart-matrix chartjs-adapter-date-fns
 
 $ npm start
